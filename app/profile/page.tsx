@@ -6,6 +6,8 @@ import { useCoachStore } from '@/store/coachStore';
 import { useRouter } from 'next/navigation';
 import { LogOut, Gauge, Target, Award, Calendar, History, ArrowRight } from 'lucide-react';
 import { CoachHistoryRecord } from '@/lib/db/types';
+import { EXAM_PROMPTS } from '@/lib/exam/examData';
+
 
 export default function ProfilePage() {
   const { user, stats, studioHistory, coachHistory, logout, initializeAuth } = useAuthStore();
@@ -155,10 +157,18 @@ export default function ProfilePage() {
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {studioHistory.map((item) => (
                   <div key={item.id} className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-4 space-y-3 shadow-sm">
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="font-bold text-[var(--text-main)] truncate max-w-[180px]">{item.title}</span>
-                      <span className="text-[var(--text-subtle)]">{new Date(item.date).toLocaleDateString()}</span>
+                    <div className="flex items-start justify-between gap-2 text-xs font-mono">
+                      <span className="font-bold text-[var(--text-main)] truncate max-w-[160px]">{item.title}</span>
+                      <span className="text-[var(--text-subtle)] shrink-0">{new Date(item.date).toLocaleDateString()}</span>
                     </div>
+                    {item.promptId && (() => {
+                      const prompt = EXAM_PROMPTS.find(p => p.id === item.promptId);
+                      return prompt ? (
+                        <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 text-[10px] font-mono font-bold text-amber-400">
+                          {prompt.exam} · {prompt.task}
+                        </div>
+                      ) : null;
+                    })()}
                     <div className="flex items-center justify-between text-xs font-mono pt-2 border-t border-[var(--border-color)]">
                       <span className="text-[var(--brand-emerald)] font-bold">{item.metrics.netWpm} WPM</span>
                       <span className="text-teal-500">{item.metrics.accuracy}% Acc</span>

@@ -14,6 +14,7 @@ export interface StudioHistoryRecord {
   title: string;
   date: string;
   metrics: SessionMetrics;
+  promptId?: string;
 }
 
 export interface CoachHistoryRecord {

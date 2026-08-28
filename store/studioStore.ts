@@ -54,9 +54,10 @@ interface StudioState {
   metrics: SessionMetrics | null;
   sessionHistory: SavedSession[];
   streak: DailyStreak;
+  activePromptId: string | null;
 
   // Actions
-  loadText: (text: string, title?: string) => void;
+  loadText: (text: string, title?: string, promptId?: string) => void;
   processKey: (key: string) => void;
   toggleStrictMode: () => void;
   toggleCharBoxes: () => void;
@@ -82,9 +83,9 @@ export const useStudioStore = create<StudioState>((set, get) => ({
   metrics: null,
   sessionHistory: [],
   streak: { currentStreak: 0, bestStreak: 0, lastActiveDate: '' },
+  activePromptId: null,
 
-
-  loadText: (text: string, title = 'Uploaded Document') => {
+  loadText: (text: string, title = 'Uploaded Document', promptId?: string) => {
     const parsed = parseText(text, title);
     set({
       parsedText: parsed,
@@ -93,6 +94,7 @@ export const useStudioStore = create<StudioState>((set, get) => ({
       endTime: null,
       isPaused: false,
       metrics: null,
+      activePromptId: promptId ?? null,
     });
   },
 
@@ -141,6 +143,7 @@ export const useStudioStore = create<StudioState>((set, get) => ({
 
       // Auto-save to user profile database if logged in
       if (typeof window !== 'undefined') {
+        const { activePromptId } = get();
         Promise.all([
           import('./authStore'),
           import('@/lib/db/localAdapter'),
@@ -152,10 +155,12 @@ export const useStudioStore = create<StudioState>((set, get) => ({
               title: parsedText.title,
               date: newSession.date,
               metrics: finalMetrics,
+              promptId: activePromptId ?? undefined,
             }).then(() => useAuthStore.getState().refreshHistoryAndStats());
           }
         });
       }
+
     }
 
 
@@ -212,6 +217,7 @@ export const useStudioStore = create<StudioState>((set, get) => ({
       endTime: null,
       isPaused: false,
       metrics: null,
+      activePromptId: null,
     });
   },
 }));

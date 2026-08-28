@@ -1,0 +1,199 @@
+# IELTS & TOEFL Exam Practice Integration
+
+Add a structured exam practice library to the Typing Studio, with a hierarchical category browser, a Briefing Room (prompt + sample answer), and a Post-Match Analysis panel with vocab/grammar highlights.
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> **Q1 — TOEFL Integrated Task (Audio)**
+> TOEFL Task 1 requires listening to a lecture audio clip. Should audio be supported in this first version, or should TOEFL Task 1 be text-only for now (lecture summary in text) with audio as a future phase?
+
+> [!IMPORTANT]
+> **Q2 — Sample Content Source**
+> Should the bundled sample essays be written directly into the codebase as a static TypeScript data file (zero-config, works fully offline), or do you want a CMS/admin editor so content can be added without a code deploy?
+
+> [!IMPORTANT]
+> **Q3 — Vocabulary Highlights**
+> In the Post-Match Analysis panel, how should key vocabulary be identified? Option A: **manually tagged** by content author per essay (best quality). Option B: **auto-detected** by CEFR level using the existing `VocabToken` system already in the Coach plugin (no manual authoring).
+
+---
+
+## Proposed Changes
+
+---
+
+### Phase 1 — Data Model
+
+All exam content lives in a static typed file — no backend required.
+
+#### [NEW] lib/exam/examLibrary.ts
+
+Core TypeScript types for the entire exam system:
+
+- `ExamName`: `'IELTS Academic' | 'IELTS General' | 'TOEFL iBT'`
+- `TaskName`: `'Task 1' | 'Task 2' | 'Integrated' | 'Academic Discussion'`
+- `QuestionType`: covers all IELTS Task 1 visuals, all IELTS Task 2 essay types, and TOEFL types
+- `ExamPrompt`: the main content interface including:
+  - Hierarchy fields (`exam`, `task`, `questionType`)
+  - Filter fields (`tags`, `targetWordCount`)
+  - Briefing Room fields (`promptText`, optional `promptImageUrl`, optional `promptAudioUrl`, `toeflReadingPassage`, `toeflStudentReplies`)
+  - Copywork target (`sampleAnswer`)
+  - Post-match fields (`scoringNotes`, `highlightedVocab: AnnotatedWord[]`, `highlightedStructures: AnnotatedSpan[]`)
+- `AnnotatedWord`: `{ word, cefr: 'C1'|'C2', explanation }`
+- `AnnotatedSpan`: `{ phrase, label, explanation }`
+
+#### [NEW] lib/exam/examData.ts
+
+Static array of `ExamPrompt` objects seeded with:
+- **IELTS Academic Task 1**: 3 samples (Line Graph, Bar Chart, Map)
+- **IELTS Academic Task 2**: 5 samples (one per essay type)
+- **IELTS General Task 2**: 2 samples
+- **TOEFL Task 2 (Academic Discussion)**: 2 samples
+- **TOEFL Task 1 (Integrated)**: 2 text-only stubs (audio deferred)
+
+Total: ~14 fully annotated prompts to start.
+
+---
+
+### Phase 2 — Library Browser Page
+
+#### [NEW] app/library/page.tsx
+
+A drill-down browser UI with 3 filter levels:
+
+```
+Level 1 — Exam pill tabs:    [IELTS Academic] [IELTS General] [TOEFL iBT]
+Level 2 — Task sub-tabs:     [Task 1]  [Task 2]
+Level 3 — Question type chips: [Line Graph] [Bar Chart] [Agree/Disagree] …
+                               ↓
+Grid of ExamPromptCard components
+```
+
+Each `ExamPromptCard` shows:
+- Question type badge (e.g. `LINE GRAPH`)
+- Truncated prompt question text
+- Tag pills (`#Band_9`, `#Technology`)
+- Word count pill
+- `→ Start Practice` CTA
+
+Added to Navbar as **Library** between Studio and Coach.
+
+---
+
+### Phase 3 — Briefing Room
+
+#### [NEW] app/library/[promptId]/page.tsx
+
+Two-column layout on ≥md, stacked on mobile.
+
+**Left column — The Prompt:**
+- Breadcrumb: `IELTS Academic > Task 2 > Agree/Disagree`
+- Full exam question in a styled card
+- Chart/map image if `promptImageUrl` is set
+- TOEFL Task 2: professor prompt + student A & B replies in a classroom-style thread UI
+- TOEFL Task 1: text-only reading passage + lecture summary
+
+**Right column — Sample Answer Preview:**
+- Renders `sampleAnswer` with `highlightedVocab` words underlined in amber with tooltip
+- `highlightedStructures` spans in violet with tooltip
+- `scoringNotes` callout block (emerald border)
+- Large **`Start Typing Practice →`** button
+
+**CTA**: calls `studioStore.loadText(prompt.sampleAnswer, prompt.id)` + sets `activePromptId`, then navigates to `/library/[promptId]/session`.
+
+---
+
+### Phase 4 — Exam Session Page
+
+#### [NEW] app/library/[promptId]/session/page.tsx
+
+Reuses `SessionHUD` and `TypingCanvas` unchanged. Differences:
+- Header breadcrumb shows exam context
+- Exit goes back to `/library/[promptId]` (Briefing Room)
+- On completion renders `ExamResultCard` instead of the generic `ResultCard`
+
+---
+
+### Phase 5 — Post-Match Analysis Panel
+
+#### [NEW] components/typing/ExamResultCard.tsx
+
+**Section 1 — Typing Performance** (same as current `ResultCard`)
+WPM · Accuracy · Time · Typos
+
+**Section 2 — Vocabulary You Practiced**
+Grid of vocab cards per `AnnotatedWord`: word in large font, `C1`/`C2` CEFR badge, explanation. Styled in amber tones.
+
+**Section 3 — Grammar Structures You Used**
+List of `AnnotatedSpan` entries: phrase, structure label, explanation. Styled in violet tones.
+
+**Section 4 — Why This Answer Scores Highly**
+`scoringNotes` as a coach-style callout with emerald border.
+
+**Action buttons:**
+- `Retry This Prompt` → resets session
+- `Back to Briefing Room` → `/library/[promptId]`
+- `Browse More Prompts` → `/library`
+
+---
+
+### Phase 6 — Store & History Integration
+
+#### [MODIFY] store/studioStore.ts
+
+Add `activePromptId: string | null` to state (set when loading an exam prompt, cleared on free-form upload).
+
+#### [MODIFY] lib/db/types.ts
+
+Add optional `promptId?: string` field to `StudioHistoryRecord` to distinguish exam sessions from free-form uploads in profile history.
+
+#### [MODIFY] app/profile/page.tsx
+
+Add a small exam badge to history cards that have a `promptId` — e.g. `IELTS Task 2` tag pill next to the session title.
+
+---
+
+### Phase 7 — Navigation
+
+#### [MODIFY] components/Navbar.tsx
+
+Add **Library** nav link between Studio and Coach:
+`Studio | Library | Coach | Profile`
+
+---
+
+## File Summary
+
+| File | Status | Purpose |
+|------|--------|---------|
+| `lib/exam/examLibrary.ts` | **NEW** | All TypeScript types for the exam system |
+| `lib/exam/examData.ts` | **NEW** | Static content — 14+ annotated exam prompts |
+| `app/library/page.tsx` | **NEW** | 3-level category browser |
+| `app/library/[promptId]/page.tsx` | **NEW** | Briefing Room (prompt + sample answer preview) |
+| `app/library/[promptId]/session/page.tsx` | **NEW** | Exam typing session |
+| `components/typing/ExamResultCard.tsx` | **NEW** | Post-match analysis panel |
+| `store/studioStore.ts` | **MODIFY** | Add `activePromptId` |
+| `lib/db/types.ts` | **MODIFY** | Add `promptId?` to `StudioHistoryRecord` |
+| `app/profile/page.tsx` | **MODIFY** | Exam badge on history cards |
+| `components/Navbar.tsx` | **MODIFY** | Library nav link |
+
+---
+
+## Verification Plan
+
+### Automated Tests
+```bash
+npx tsc --noEmit   # 0 type errors
+npm run lint       # 0 lint errors
+```
+
+### Manual Verification
+1. `/library` renders — all 3 exam tabs, filter drill-down works
+2. Click a card → Briefing Room renders prompt + annotated sample answer
+3. Click `Start Typing Practice` → session page loads correctly
+4. Complete session → `ExamResultCard` renders all 4 sections
+5. `Retry This Prompt` resets and returns to session
+6. Complete while logged in → Profile history shows exam badge on that session
+7. Mobile layout verified — browser stacks cleanly

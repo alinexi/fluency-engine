@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Keyboard, Sparkles, Settings, Sun, Moon, Coffee, User } from 'lucide-react';
+import { Keyboard, Sparkles, Settings, Sun, Moon, Coffee, User, Library } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/store/themeStore';
 import { useAuthStore } from '@/store/authStore';
@@ -53,6 +53,19 @@ export function Navbar() {
           >
             <Keyboard className="h-4 w-4" />
             <span>Typing Studio</span>
+          </Link>
+
+          <Link
+            href="/library"
+            className={cn(
+              'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200',
+              pathname.startsWith('/library')
+                ? 'bg-[var(--bg-card)] text-amber-400 shadow-md border border-[var(--border-color)] font-bold'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-hover)]'
+            )}
+          >
+            <Library className="h-4 w-4" />
+            <span>Library</span>
           </Link>
 
           <Link
