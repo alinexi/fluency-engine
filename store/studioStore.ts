@@ -109,6 +109,21 @@ export const useStudioStore = create<StudioState>((set, get) => ({
       };
 
       nextHistory = [newSession, ...sessionHistory];
+
+      // Auto-save to user profile database if logged in
+      if (typeof window !== 'undefined') {
+        const { useAuthStore } = require('./authStore');
+        const { localDbAdapter } = require('@/lib/db/localAdapter');
+        const user = useAuthStore.getState().user;
+        if (user) {
+          localDbAdapter.saveStudioSession({
+            userId: user.id,
+            title: parsedText.title,
+            date: newSession.date,
+            metrics: finalMetrics,
+          }).then(() => useAuthStore.getState().refreshHistoryAndStats());
+        }
+      }
     }
 
     set({

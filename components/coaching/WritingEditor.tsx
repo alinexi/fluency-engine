@@ -74,6 +74,23 @@ export function WritingEditor() {
 
       const evalData = await res.json();
       setResult(evalData);
+
+      // Auto-save to user profile database if logged in
+      const { useAuthStore } = await import('@/store/authStore');
+      const { localDbAdapter } = await import('@/lib/db/localAdapter');
+      const user = useAuthStore.getState().user;
+      if (user) {
+        await localDbAdapter.saveCoachResult({
+          userId: user.id,
+          promptTitle: activePrompt?.title || 'Custom Essay',
+          examMode: selectedMode,
+          date: new Date().toISOString(),
+          essayText,
+          result: evalData,
+        });
+        await useAuthStore.getState().refreshHistoryAndStats();
+      }
+
       router.push('/coach/results');
     } catch (err: any) {
       console.error(err);
