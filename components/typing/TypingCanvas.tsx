@@ -1,23 +1,61 @@
 'use client';
 
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useState } from 'react';
 import { useStudioStore } from '@/store/studioStore';
 import { cn } from '@/lib/utils';
-import { Keyboard, CheckCircle2 } from 'lucide-react';
+import { Keyboard, CheckCircle2, Settings } from 'lucide-react';
 
 export function TypingCanvas() {
-  const { parsedText, matchState, processKey, isPaused, showCharBoxes, showActiveHighlight } = useStudioStore();
-  const containerRef = useRef<HTMLDivElement>(null);
+  const {
+    parsedText,
+    matchState,
+    processKey,
+    isPaused,
+    strictMode,
+    toggleStrictMode,
+    showCharBoxes,
+    toggleCharBoxes,
+    showActiveHighlight,
+    toggleActiveHighlight,
+    boldTypedText,
+    toggleBoldTypedText,
+  } = useStudioStore();
 
-  // Focus container to capture keyboard events
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const refocusCanvas = () => {
+    setTimeout(() => {
+      containerRef.current?.focus();
+    }, 10);
+  };
+
+  // Focus container on mount and recover focus when user types anywhere
   useEffect(() => {
-    containerRef.current?.focus();
+    refocusCanvas();
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
+        return;
+      }
+
+      if (['Control', 'Alt', 'Shift', 'Meta', 'CapsLock', 'Escape'].includes(e.key)) {
+        return;
+      }
+
+      if (containerRef.current && document.activeElement !== containerRef.current) {
+        containerRef.current.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (isPaused) return;
 
-    // Prevent default browser actions for Space, Tab, Backspace, etc.
     if (['Space', 'Backspace', 'Tab'].includes(e.code)) {
       e.preventDefault();
     }
@@ -27,7 +65,6 @@ export function TypingCanvas() {
 
   const targetChars = useMemo(() => parsedText?.fullText.split('') || [], [parsedText?.fullText]);
   const currentIndex = matchState?.currentIndex ?? 0;
-
 
   // Group characters into word tokens so words wrap together as unbroken units
   const wordTokens = useMemo(() => {
@@ -40,7 +77,6 @@ export function TypingCanvas() {
       const ch = targetChars[i];
       currentToken.push({ globalIdx: i, char: ch });
 
-      // End token after space or at text end
       if (ch === ' ' || i === targetChars.length - 1) {
         tokens.push(currentToken);
         currentToken = [];
@@ -49,7 +85,6 @@ export function TypingCanvas() {
     return tokens;
   }, [targetChars]);
 
-
   if (!parsedText || !matchState) return null;
 
   return (
@@ -57,6 +92,7 @@ export function TypingCanvas() {
       ref={containerRef}
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      onClick={() => refocusCanvas()}
       className="relative outline-none cursor-default select-none rounded-3xl border border-[var(--border-color)] bg-[var(--bg-card)] p-8 sm:p-12 shadow-2xl backdrop-blur-2xl min-h-[340px] transition-all"
     >
       {/* Focus overlay header */}
@@ -66,13 +102,127 @@ export function TypingCanvas() {
           <Keyboard className="h-4 w-4 text-[var(--brand-emerald)]" />
           COPYWORK CANVAS · KEYBOARD ACTIVE
         </span>
+        
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1 text-[var(--text-subtle)] font-mono text-[11px]">
             <span>🌐</span> english
           </span>
+
           <span className="font-bold bg-[var(--bg-input)] text-[var(--text-main)] px-3 py-1 rounded-full border border-[var(--border-color)]">
             {currentIndex} / {targetChars.length} CHARS
           </span>
+
+          {/* Settings Gear Popover Button */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsSettingsOpen(prev => !prev);
+                refocusCanvas();
+              }}
+              className="flex items-center gap-1.5 rounded-full bg-[var(--bg-input)] hover:bg-[var(--bg-card-hover)] text-[var(--text-main)] px-3 py-1 text-xs font-mono border border-[var(--border-color)] transition-all shadow-sm"
+              title="Canvas Preferences"
+            >
+              <Settings className={cn('h-3.5 w-3.5 transition-transform duration-200', isSettingsOpen ? 'text-[var(--brand-emerald)] rotate-45' : 'text-[var(--text-muted)]')} />
+              <span>Settings</span>
+            </button>
+
+            {/* Gear Dropdown Menu */}
+            {isSettingsOpen && (
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="absolute right-0 top-full mt-2 w-72 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-4 shadow-2xl backdrop-blur-2xl z-30 space-y-3 animate-in fade-in zoom-in-95 duration-150"
+              >
+                <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-2 text-xs font-mono font-bold text-[var(--text-main)]">
+                  <span>CANVAS PREFERENCES</span>
+                  <span className="text-[10px] text-[var(--brand-emerald)] font-normal">Auto-saved</span>
+                </div>
+
+                {/* 1. Bold Typed Words Toggle */}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[var(--text-main)] font-medium">Bold Typed Text</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleBoldTypedText();
+                      refocusCanvas();
+                    }}
+                    className={cn(
+                      'rounded-lg px-2.5 py-1 font-mono font-bold text-[11px] border transition-all',
+                      boldTypedText
+                        ? 'bg-emerald-500/15 text-[var(--brand-emerald)] border-emerald-500/30'
+                        : 'bg-[var(--bg-input)] text-[var(--text-muted)] border-[var(--border-color)]'
+                    )}
+                  >
+                    {boldTypedText ? 'BOLD ON' : 'BOLD OFF'}
+                  </button>
+                </div>
+
+                {/* 2. Strict Mode Toggle */}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[var(--text-main)] font-medium">Strict Match Mode</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleStrictMode();
+                      refocusCanvas();
+                    }}
+                    className={cn(
+                      'rounded-lg px-2.5 py-1 font-mono font-bold text-[11px] border transition-all',
+                      strictMode
+                        ? 'bg-emerald-500/15 text-[var(--brand-emerald)] border-emerald-500/30'
+                        : 'bg-[var(--bg-input)] text-[var(--text-muted)] border-[var(--border-color)]'
+                    )}
+                  >
+                    {strictMode ? 'STRICT ON' : 'STRICT OFF'}
+                  </button>
+                </div>
+
+                {/* 3. Character Background Boxes Toggle */}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[var(--text-main)] font-medium">Character Boxes</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleCharBoxes();
+                      refocusCanvas();
+                    }}
+                    className={cn(
+                      'rounded-lg px-2.5 py-1 font-mono font-bold text-[11px] border transition-all',
+                      showCharBoxes
+                        ? 'bg-violet-500/15 text-[var(--brand-violet)] border-violet-500/30'
+                        : 'bg-[var(--bg-input)] text-[var(--text-muted)] border-[var(--border-color)]'
+                    )}
+                  >
+                    {showCharBoxes ? 'BOXES ON' : 'BOXES OFF'}
+                  </button>
+                </div>
+
+                {/* 4. Active Character Highlight Toggle */}
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[var(--text-main)] font-medium">Active Box Outline</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleActiveHighlight();
+                      refocusCanvas();
+                    }}
+                    className={cn(
+                      'rounded-lg px-2.5 py-1 font-mono font-bold text-[11px] border transition-all',
+                      showActiveHighlight
+                        ? 'bg-emerald-500/15 text-[var(--brand-emerald)] border-emerald-500/30'
+                        : 'bg-[var(--bg-input)] text-[var(--text-muted)] border-[var(--border-color)]'
+                    )}
+                  >
+                    {showActiveHighlight ? 'OUTLINE ON' : 'OUTLINE OFF'}
+                  </button>
+                </div>
+
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
 
@@ -84,11 +234,12 @@ export function TypingCanvas() {
               const isCurrent = globalIdx === currentIndex;
               const charState = matchState.charStates[globalIdx];
 
-              let stateStyles = 'text-[var(--untyped-text)]';
+              let stateStyles = 'text-[var(--untyped-text)] font-normal';
               if (charState === 'correct') {
+                const weight = boldTypedText ? 'font-bold' : 'font-normal';
                 stateStyles = showCharBoxes
-                  ? 'text-[var(--typed-text)] font-semibold bg-emerald-500/15 rounded-md border border-emerald-500/20'
-                  : 'text-[var(--typed-text)] font-semibold';
+                  ? `text-[var(--typed-text)] ${weight} bg-emerald-500/15 rounded-md border border-emerald-500/20`
+                  : `text-[var(--typed-text)] ${weight}`;
               } else if (charState === 'incorrect') {
                 stateStyles = showCharBoxes
                   ? 'text-rose-600 dark:text-rose-400 font-bold bg-rose-500/25 underline decoration-rose-500 rounded-md border border-rose-500/30'
@@ -104,7 +255,6 @@ export function TypingCanvas() {
                     isCurrent && showActiveHighlight && 'bg-[var(--bg-card-hover)] ring-1 ring-[var(--brand-emerald)]/40 rounded-md'
                   )}
                 >
-
                   {/* Caret Line */}
                   {isCurrent && (
                     <span className="absolute -left-[1px] top-0 bottom-0 w-[3px] bg-[var(--caret-color)] animate-caret rounded-full shadow-[0_0_10px_var(--caret-color)]" />
@@ -116,7 +266,6 @@ export function TypingCanvas() {
           </span>
         ))}
       </div>
-
 
       {/* Completion Overlay */}
       {matchState.isCompleted && (
@@ -133,3 +282,4 @@ export function TypingCanvas() {
     </div>
   );
 }
+

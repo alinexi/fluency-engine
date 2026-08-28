@@ -10,7 +10,17 @@ import { cn } from '@/lib/utils';
 
 export default function SettingsPage() {
   const { activeProvider, setActiveProvider, ollamaBaseUrl, setOllamaBaseUrl } = useCoachStore();
-  const { strictMode, toggleStrictMode, showCharBoxes, toggleCharBoxes } = useStudioStore();
+  const {
+    strictMode,
+    toggleStrictMode,
+    showCharBoxes,
+    toggleCharBoxes,
+    showActiveHighlight,
+    toggleActiveHighlight,
+    boldTypedText,
+    toggleBoldTypedText,
+  } = useStudioStore();
+
   const { theme, setTheme } = useThemeStore();
 
   const [openaiKey, setOpenaiKey] = useState('');
@@ -258,6 +268,27 @@ export default function SettingsPage() {
           </button>
         </div>
 
+        {/* Bold Typed Text Toggle */}
+        <div className="flex items-center justify-between p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-input)]">
+          <div>
+            <div className="font-semibold text-[var(--text-main)] text-sm">Bold Typed Text</div>
+            <div className="text-xs text-[var(--text-muted)] mt-0.5">
+              Render correctly typed characters in bold weight. Turn OFF for standard font weight.
+            </div>
+          </div>
+          <button
+            onClick={toggleBoldTypedText}
+            className={cn(
+              'rounded-lg px-4 py-2 text-xs font-mono font-bold transition-all border',
+              boldTypedText
+                ? 'bg-emerald-500/15 text-[var(--brand-emerald)] border-emerald-500/30'
+                : 'bg-[var(--bg-card-hover)] text-[var(--text-muted)] border-[var(--border-color)]'
+            )}
+          >
+            {boldTypedText ? 'BOLD ON' : 'BOLD OFF'}
+          </button>
+        </div>
+
         {/* Active Character Box Highlight Toggle */}
         <div className="flex items-center justify-between p-4 rounded-xl border border-[var(--border-color)] bg-[var(--bg-input)]">
           <div>
@@ -267,18 +298,19 @@ export default function SettingsPage() {
             </div>
           </div>
           <button
-            onClick={useStudioStore.getState().toggleActiveHighlight}
+            onClick={toggleActiveHighlight}
             className={cn(
               'rounded-lg px-4 py-2 text-xs font-mono font-bold transition-all border',
-              useStudioStore(state => state.showActiveHighlight)
+              showActiveHighlight
                 ? 'bg-emerald-500/15 text-[var(--brand-emerald)] border-emerald-500/30'
                 : 'bg-[var(--bg-card-hover)] text-[var(--text-muted)] border-[var(--border-color)]'
             )}
           >
-            {useStudioStore(state => state.showActiveHighlight) ? 'BOX ON' : 'BOX OFF'}
+            {showActiveHighlight ? 'BOX ON' : 'BOX OFF'}
           </button>
         </div>
       </div>
+
 
     </div>
   );

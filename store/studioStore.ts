@@ -19,6 +19,28 @@ export interface SavedSession {
   metrics: SessionMetrics;
 }
 
+const PREFS_KEY = 'typecoach_studio_prefs';
+
+function loadSavedPrefs() {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = localStorage.getItem(PREFS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function savePrefs(prefs: Record<string, boolean>) {
+  if (typeof window === 'undefined') return;
+  try {
+    const existing = loadSavedPrefs();
+    localStorage.setItem(PREFS_KEY, JSON.stringify({ ...existing, ...prefs }));
+  } catch {
+    // ignore
+  }
+}
+
 interface StudioState {
   parsedText: ParsedText | null;
   matchState: StrictMatchState | null;
@@ -27,6 +49,7 @@ interface StudioState {
   strictMode: boolean;
   showCharBoxes: boolean;
   showActiveHighlight: boolean;
+  boldTypedText: boolean;
   isPaused: boolean;
   metrics: SessionMetrics | null;
   sessionHistory: SavedSession[];
@@ -38,23 +61,28 @@ interface StudioState {
   toggleStrictMode: () => void;
   toggleCharBoxes: () => void;
   toggleActiveHighlight: () => void;
+  toggleBoldTypedText: () => void;
   togglePause: () => void;
   resetSession: () => void;
   clearLoadedText: () => void;
 }
+
+const savedPrefs = loadSavedPrefs();
 
 export const useStudioStore = create<StudioState>((set, get) => ({
   parsedText: null,
   matchState: null,
   startTime: null,
   endTime: null,
-  strictMode: true,
-  showCharBoxes: true,
-  showActiveHighlight: true,
+  strictMode: savedPrefs.strictMode ?? true,
+  showCharBoxes: savedPrefs.showCharBoxes ?? true,
+  showActiveHighlight: savedPrefs.showActiveHighlight ?? true,
+  boldTypedText: savedPrefs.boldTypedText ?? true,
   isPaused: false,
   metrics: null,
   sessionHistory: [],
   streak: { currentStreak: 0, bestStreak: 0, lastActiveDate: '' },
+
 
   loadText: (text: string, title = 'Uploaded Document') => {
     const parsed = parseText(text, title);
@@ -141,10 +169,28 @@ export const useStudioStore = create<StudioState>((set, get) => ({
     });
   },
 
-  toggleStrictMode: () => set(state => ({ strictMode: !state.strictMode })),
-  toggleCharBoxes: () => set(state => ({ showCharBoxes: !state.showCharBoxes })),
-  toggleActiveHighlight: () => set(state => ({ showActiveHighlight: !state.showActiveHighlight })),
+  toggleStrictMode: () => set(state => {
+    const next = !state.strictMode;
+    savePrefs({ strictMode: next });
+    return { strictMode: next };
+  }),
+  toggleCharBoxes: () => set(state => {
+    const next = !state.showCharBoxes;
+    savePrefs({ showCharBoxes: next });
+    return { showCharBoxes: next };
+  }),
+  toggleActiveHighlight: () => set(state => {
+    const next = !state.showActiveHighlight;
+    savePrefs({ showActiveHighlight: next });
+    return { showActiveHighlight: next };
+  }),
+  toggleBoldTypedText: () => set(state => {
+    const next = !state.boldTypedText;
+    savePrefs({ boldTypedText: next });
+    return { boldTypedText: next };
+  }),
   togglePause: () => set(state => ({ isPaused: !state.isPaused })),
+
 
   resetSession: () => {
     const { parsedText } = get();
