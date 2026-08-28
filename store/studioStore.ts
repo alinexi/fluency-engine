@@ -83,9 +83,10 @@ export const useStudioStore = create<StudioState>((set, get) => ({
     const now = Date.now();
     const effectiveStartTime = startTime ?? now;
     
-    let nextEndTime = null;
-    let finalMetrics = null;
+    let nextEndTime: number | null = null;
+    let finalMetrics: SessionMetrics | null = null;
     let nextStreak = streak;
+
     let nextHistory = sessionHistory;
 
     if (nextMatchState.isCompleted && !matchState.isCompleted) {
@@ -117,7 +118,7 @@ export const useStudioStore = create<StudioState>((set, get) => ({
           import('@/lib/db/localAdapter'),
         ]).then(([{ useAuthStore }, { localDbAdapter }]) => {
           const user = useAuthStore.getState().user;
-          if (user) {
+          if (user && finalMetrics) {
             localDbAdapter.saveStudioSession({
               userId: user.id,
               title: parsedText.title,
@@ -127,8 +128,8 @@ export const useStudioStore = create<StudioState>((set, get) => ({
           }
         });
       }
-
     }
+
 
     set({
       matchState: nextMatchState,

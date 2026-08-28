@@ -101,12 +101,10 @@ export function TypingCanvas() {
                   className={cn(
                     'relative transition-colors duration-150 px-[2px] py-[1px]',
                     stateStyles,
-                    isCurrent && (showActiveHighlight
-                      ? 'bg-[var(--bg-card-hover)] text-[var(--text-main)] font-bold ring-2 ring-[var(--brand-emerald)] rounded-md shadow-sm'
-                      : 'text-[var(--text-main)] font-bold'
-                    )
+                    isCurrent && showActiveHighlight && 'bg-[var(--bg-card-hover)] ring-1 ring-[var(--brand-emerald)]/40 rounded-md'
                   )}
                 >
+
                   {/* Caret Line */}
                   {isCurrent && (
                     <span className="absolute -left-[1px] top-0 bottom-0 w-[3px] bg-[var(--caret-color)] animate-caret rounded-full shadow-[0_0_10px_var(--caret-color)]" />

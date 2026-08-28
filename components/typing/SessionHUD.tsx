@@ -25,11 +25,13 @@ export function SessionHUD() {
 
   if (!matchState) return null;
 
+  const totalTyped = matchState.totalKeystrokes;
+  const errors = matchState.errorsCount;
   const minutes = Math.max(0.01, elapsedSeconds / 60);
 
   const netWpm = Math.max(0, Math.round(((totalTyped - errors) / 5) / minutes)) || 0;
-
   const accuracy = totalTyped > 0 ? Math.max(0, Math.round(((totalTyped - errors) / totalTyped) * 100)) : 100;
+
 
 
   const formatTime = (secs: number) => {
