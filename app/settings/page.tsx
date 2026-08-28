@@ -241,6 +241,27 @@ export default function SettingsPage() {
             {showCharBoxes ? 'BOXES ON' : 'BOXES OFF'}
           </button>
         </div>
+
+        {/* Active Character Box Highlight Toggle */}
+        <div className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950/60">
+          <div>
+            <div className="font-semibold text-zinc-900 dark:text-white text-sm">Active Character Green Box</div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+              Highlights the current character to type with a green rectangle border. Turn OFF for cursor line only.
+            </div>
+          </div>
+          <button
+            onClick={useStudioStore.getState().toggleActiveHighlight}
+            className={cn(
+              'rounded-lg px-4 py-2 text-xs font-mono font-bold transition-all border',
+              useStudioStore(state => state.showActiveHighlight)
+                ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                : 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border-zinc-300 dark:border-zinc-700'
+            )}
+          >
+            {useStudioStore(state => state.showActiveHighlight) ? 'BOX ON' : 'BOX OFF'}
+          </button>
+        </div>
       </div>
 
     </div>
