@@ -23,8 +23,9 @@ export interface CoachingCard {
   treeNodes?: {
     label: string;
     type: 'subject' | 'verb' | 'object' | 'modifier' | 'error';
-    children?: any[];
+    children?: unknown[];
   };
+
 }
 
 export interface VocabToken {

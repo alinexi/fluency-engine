@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Keyboard, Sparkles, Settings, Sun, Moon, User } from 'lucide-react';
+import { Keyboard, Sparkles, Settings, Sun, Moon, Coffee, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useThemeStore } from '@/store/themeStore';
 import { useAuthStore } from '@/store/authStore';
@@ -17,27 +17,38 @@ export function Navbar() {
     initializeAuth();
   }, []);
 
+  const getNextThemeLabel = () => {
+    if (theme === 'dark') return 'Light theme';
+    if (theme === 'light') return 'Warm Coffee theme';
+    return 'Dark theme';
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md transition-colors">
+    <header className="sticky top-0 z-50 w-full border-b border-[var(--border-color)] bg-[var(--bg-card)]/80 backdrop-blur-xl transition-colors duration-200">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2 text-xl font-bold tracking-tight text-zinc-900 dark:text-white transition-opacity hover:opacity-90">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-400 via-teal-500 to-indigo-600 text-zinc-950 font-mono font-extrabold text-lg">
+        <Link href="/" className="group flex items-center gap-3 tracking-tight focus-visible:outline-none">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-violet-600 text-white font-mono font-black text-sm shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
             FC
           </div>
-          <span>Fluency<span className="text-emerald-500 dark:text-emerald-400 font-mono">Engine</span></span>
+          <div className="flex flex-col">
+            <span className="text-base font-extrabold text-[var(--text-main)] tracking-tight flex items-center gap-1">
+              Fluency<span className="text-[var(--brand-emerald)] font-mono font-bold">Engine</span>
+            </span>
+            <span className="text-[10px] font-mono text-[var(--text-subtle)] -mt-1 tracking-wider uppercase">TypeCoach OS</span>
+          </div>
         </Link>
 
-        {/* Navigation Tabs */}
-        <nav className="flex items-center gap-1 rounded-xl bg-zinc-100 dark:bg-zinc-900/90 p-1.5 border border-zinc-200 dark:border-zinc-800">
+        {/* Centered Floating Navigation Pills */}
+        <nav aria-label="Main Navigation" className="flex items-center gap-1.5 rounded-2xl bg-[var(--bg-input)] p-1.5 border border-[var(--border-color)] shadow-inner">
           <Link
             href="/studio"
             className={cn(
-              'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200',
+              'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200',
               pathname.startsWith('/studio')
-                ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 shadow-sm'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50'
+                ? 'bg-[var(--bg-card)] text-[var(--brand-emerald)] shadow-md border border-[var(--border-color)] font-bold'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-hover)]'
             )}
           >
             <Keyboard className="h-4 w-4" />
@@ -47,10 +58,10 @@ export function Navbar() {
           <Link
             href="/coach"
             className={cn(
-              'flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200',
+              'flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition-all duration-200',
               pathname.startsWith('/coach')
-                ? 'bg-violet-500/15 text-violet-600 dark:text-violet-400 border border-violet-500/30 shadow-sm'
-                : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50'
+                ? 'bg-[var(--bg-card)] text-[var(--brand-violet)] shadow-md border border-[var(--border-color)] font-bold'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-card-hover)]'
             )}
           >
             <Sparkles className="h-4 w-4" />
@@ -58,21 +69,21 @@ export function Navbar() {
           </Link>
         </nav>
 
-        {/* Action Controls: User Profile, Theme Toggle & Settings */}
+        {/* Right Controls: User Profile, Theme Switcher & Settings */}
         <div className="flex items-center gap-2">
           
-          {/* User Profile / Login Link */}
+          {/* Profile / Auth Button */}
           {user ? (
             <Link
               href="/profile"
               className={cn(
-                'flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-mono font-semibold transition-all border',
+                'flex items-center gap-2 rounded-xl px-3 py-1.5 text-xs font-mono font-semibold transition-all border border-[var(--border-color)]',
                 pathname === '/profile'
-                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 shadow-sm'
-                  : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-800'
+                  ? 'bg-emerald-500/15 text-[var(--brand-emerald)] border-emerald-500/30 shadow-sm'
+                  : 'bg-[var(--bg-input)] text-[var(--text-main)] hover:bg-[var(--bg-card-hover)]'
               )}
             >
-              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-zinc-950 font-bold text-[10px]">
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--brand-emerald)] text-white font-bold text-[10px]">
                 {user.username.charAt(0).toUpperCase()}
               </div>
               <span>{user.username}</span>
@@ -81,39 +92,44 @@ export function Navbar() {
             <Link
               href="/login"
               className={cn(
-                'flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-mono font-medium transition-all border',
+                'flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all border border-[var(--border-color)]',
                 pathname === '/login'
-                  ? 'bg-violet-500/15 text-violet-600 dark:text-violet-400 border-violet-500/30'
-                  : 'bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white'
+                  ? 'bg-violet-500/15 text-[var(--brand-violet)] border-violet-500/30 font-bold'
+                  : 'bg-[var(--bg-input)] text-[var(--text-main)] hover:bg-[var(--bg-card-hover)]'
               )}
             >
               <User className="h-3.5 w-3.5" />
-              <span>Log In</span>
+              <span>Sign In</span>
             </Link>
           )}
 
-          {/* Theme Toggle Button */}
+          {/* Theme Switcher Button */}
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-2 rounded-lg p-2.5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-colors"
-            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} mode`}
+            className="flex items-center justify-center rounded-xl h-9 w-9 text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-main)] border border-[var(--border-color)] transition-colors"
+            title={`Switch theme (Current: ${theme}). Next: ${getNextThemeLabel()}`}
+            aria-label={`Switch theme (Current: ${theme}). Next: ${getNextThemeLabel()}`}
           >
-            {theme === 'dark' ? <Sun className="h-5 w-5 text-amber-400" /> : <Moon className="h-5 w-5 text-indigo-600" />}
+            {theme === 'dark' && <Sun className="h-4 w-4 text-amber-400" />}
+            {theme === 'light' && <Coffee className="h-4 w-4 text-amber-700" />}
+            {theme === 'coffee' && <Moon className="h-4 w-4 text-indigo-400" />}
           </button>
 
           {/* Settings */}
           <Link
             href="/settings"
             className={cn(
-              'flex items-center gap-2 rounded-lg p-2.5 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-white transition-colors',
-              pathname === '/settings' && 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-800'
+              'flex items-center justify-center rounded-xl h-9 w-9 text-[var(--text-muted)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-main)] border border-[var(--border-color)] transition-colors',
+              pathname === '/settings' && 'text-[var(--text-main)] bg-[var(--bg-card-hover)] border-[var(--border-hover)]'
             )}
             title="Settings & BYOK Keys"
+            aria-label="Settings"
           >
-            <Settings className="h-5 w-5" />
+            <Settings className="h-4 w-4" />
           </Link>
         </div>
       </div>
     </header>
   );
 }
+

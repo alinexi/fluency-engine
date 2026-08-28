@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Send, Clock, FileText, AlertCircle, Loader2 } from 'lucide-react';
+import { Send, Clock, AlertCircle, Loader2 } from 'lucide-react';
 import { useCoachStore } from '@/store/coachStore';
 import { getDecryptedApiKey } from '@/lib/crypto/keyStore';
 import { useRouter } from 'next/navigation';
@@ -92,9 +92,10 @@ export function WritingEditor() {
       }
 
       router.push('/coach/results');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || 'Failed to connect to AI plugin. Check API key in settings.');
+      const errMsg = err instanceof Error ? err.message : 'Failed to connect to AI plugin. Check API key in settings.';
+      setError(errMsg);
       setIsEvaluating(false);
     }
   };
@@ -104,49 +105,51 @@ export function WritingEditor() {
       
       {/* Active Prompt Card */}
       {activePrompt && (
-        <div className="rounded-2xl border border-violet-500/20 bg-zinc-900/80 p-6 backdrop-blur-xl">
-          <div className="flex items-center justify-between border-b border-zinc-800 pb-3 mb-3">
-            <span className="rounded-md bg-violet-500/10 px-2.5 py-1 text-xs font-mono font-semibold text-violet-400">
+        <div className="rounded-2xl border border-violet-500/20 bg-[var(--bg-card)] p-6 backdrop-blur-xl">
+          <div className="flex items-center justify-between border-b border-[var(--border-color)] pb-3 mb-3">
+            <span className="rounded-md bg-violet-500/10 px-2.5 py-1 text-xs font-mono font-semibold text-[var(--brand-violet)]">
               PROMPT · {activePrompt.title}
             </span>
-            <div className="flex items-center gap-4 text-xs font-mono text-zinc-400">
+            <div className="flex items-center gap-4 text-xs font-mono text-[var(--text-muted)]">
               <span className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5 text-violet-400" />
+                <Clock className="h-3.5 w-3.5 text-[var(--brand-violet)]" />
                 {formatTime(secondsRemaining)}
               </span>
               <span>Target: {activePrompt.minWords}+ words</span>
             </div>
           </div>
-          <p className="text-sm text-zinc-200 leading-relaxed font-medium">
-            "{activePrompt.promptText}"
+          <p className="text-sm text-[var(--text-main)] leading-relaxed font-medium">
+            &ldquo;{activePrompt.promptText}&rdquo;
           </p>
         </div>
       )}
 
+
       {/* Main Free-Typing Textarea */}
       <div className="relative">
         <textarea
+          aria-label="Essay writing editor"
           value={essayText}
           onChange={(e) => setEssayText(e.target.value)}
           placeholder="Begin writing your essay here under exam conditions..."
-          className="w-full min-h-[360px] rounded-2xl border border-zinc-800 bg-zinc-900/90 p-6 text-zinc-100 placeholder-zinc-600 focus:border-violet-500/50 focus:outline-none focus:ring-2 focus:ring-violet-500/20 text-base leading-relaxed resize-y font-sans shadow-xl"
+          className="w-full min-h-[360px] rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 text-[var(--text-main)] placeholder-[var(--text-subtle)] focus:border-[var(--brand-violet)] focus:outline-none text-base leading-relaxed resize-y font-sans shadow-xl"
         />
 
         {/* Live Footer Stats */}
         <div className="mt-3 flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-3">
-            <span className={isWordCountMet ? 'text-emerald-400 font-semibold' : 'text-zinc-400'}>
+            <span className={isWordCountMet ? 'text-[var(--brand-emerald)] font-semibold' : 'text-[var(--text-muted)]'}>
               Words: {wordCount} / {targetWords}
             </span>
           </div>
-          <span className="text-zinc-500">Auto-save enabled</span>
+          <span className="text-[var(--text-subtle)]">Auto-save enabled</span>
         </div>
       </div>
 
       {/* Error Alert */}
       {evaluationError && (
-        <div className="flex items-center gap-3 rounded-xl bg-rose-500/10 p-4 border border-rose-500/20 text-rose-300 text-sm">
-          <AlertCircle className="h-5 w-5 shrink-0 text-rose-400" />
+        <div className="flex items-center gap-3 rounded-xl bg-rose-500/10 p-4 border border-rose-500/20 text-rose-500 text-sm">
+          <AlertCircle className="h-5 w-5 shrink-0 text-rose-500" />
           <span>{evaluationError}</span>
         </div>
       )}
@@ -174,4 +177,5 @@ export function WritingEditor() {
 
     </div>
   );
+
 }

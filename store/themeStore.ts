@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'coffee';
 
 interface ThemeState {
   theme: Theme;
@@ -13,18 +13,15 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   setTheme: (theme: Theme) => {
     if (typeof document !== 'undefined') {
       const root = document.documentElement;
-      if (theme === 'dark') {
-        root.classList.add('dark');
-        root.classList.remove('light');
-      } else {
-        root.classList.add('light');
-        root.classList.remove('dark');
-      }
+      root.classList.remove('dark', 'light', 'coffee');
+      root.classList.add(theme);
     }
     set({ theme });
   },
   toggleTheme: () => {
-    const nextTheme = get().theme === 'dark' ? 'light' : 'dark';
+    const current = get().theme;
+    const nextTheme: Theme = current === 'dark' ? 'light' : current === 'light' ? 'coffee' : 'dark';
     get().setTheme(nextTheme);
   },
 }));
+

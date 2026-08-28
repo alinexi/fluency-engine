@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import { useStudioStore } from '@/store/studioStore';
 import { cn } from '@/lib/utils';
+import { Keyboard, CheckCircle2 } from 'lucide-react';
 
 export function TypingCanvas() {
   const { parsedText, matchState, processKey, isPaused, showCharBoxes, showActiveHighlight } = useStudioStore();
@@ -24,8 +25,9 @@ export function TypingCanvas() {
     processKey(e.key);
   };
 
-  const targetChars = parsedText?.fullText.split('') || [];
+  const targetChars = useMemo(() => parsedText?.fullText.split('') || [], [parsedText?.fullText]);
   const currentIndex = matchState?.currentIndex ?? 0;
+
 
   // Group characters into word tokens so words wrap together as unbroken units
   const wordTokens = useMemo(() => {
@@ -45,7 +47,8 @@ export function TypingCanvas() {
       }
     }
     return tokens;
-  }, [parsedText?.fullText]);
+  }, [targetChars]);
+
 
   if (!parsedText || !matchState) return null;
 
@@ -54,33 +57,41 @@ export function TypingCanvas() {
       ref={containerRef}
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      className="relative outline-none cursor-default select-none rounded-2xl border border-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/90 bg-white/90 p-8 sm:p-12 shadow-2xl backdrop-blur-xl min-h-[300px]"
+      className="relative outline-none cursor-default select-none rounded-3xl border border-[var(--border-color)] bg-[var(--bg-card)] p-8 sm:p-12 shadow-2xl backdrop-blur-2xl min-h-[340px] transition-all"
     >
       {/* Focus overlay header */}
-      <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400 mb-6 flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-3">
-        <span className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          COPYWORK CANVAS · KEYBOARD LISTEN ACTIVE
+      <div className="text-xs font-mono text-[var(--text-muted)] mb-8 flex items-center justify-between border-b border-[var(--border-color)] pb-4">
+        <span className="flex items-center gap-2 font-bold tracking-wide text-[var(--text-main)]">
+          <span className="h-2.5 w-2.5 rounded-full bg-[var(--brand-emerald)] animate-pulse shadow-[0_0_8px_var(--brand-emerald)]" />
+          <Keyboard className="h-4 w-4 text-[var(--brand-emerald)]" />
+          COPYWORK CANVAS · KEYBOARD ACTIVE
         </span>
-        <span>{currentIndex} / {targetChars.length} CHARS</span>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1 text-[var(--text-subtle)] font-mono text-[11px]">
+            <span>🌐</span> english
+          </span>
+          <span className="font-bold bg-[var(--bg-input)] text-[var(--text-main)] px-3 py-1 rounded-full border border-[var(--border-color)]">
+            {currentIndex} / {targetChars.length} CHARS
+          </span>
+        </div>
       </div>
 
       {/* Character Grid — Grouped by word to prevent words breaking across lines */}
-      <div className="font-mono text-xl sm:text-2xl leading-relaxed tracking-wide text-zinc-400 dark:text-zinc-500 flex flex-wrap gap-y-2">
+      <div className="font-mono text-xl sm:text-2xl leading-loose tracking-wide flex flex-wrap gap-y-3 gap-x-0.5">
         {wordTokens.map((token, tokenIdx) => (
           <span key={tokenIdx} className="inline-block whitespace-nowrap">
             {token.map(({ globalIdx, char }) => {
               const isCurrent = globalIdx === currentIndex;
               const charState = matchState.charStates[globalIdx];
 
-              let stateStyles = 'text-zinc-400 dark:text-zinc-500';
+              let stateStyles = 'text-[var(--untyped-text)]';
               if (charState === 'correct') {
                 stateStyles = showCharBoxes
-                  ? 'text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-500/15 dark:bg-emerald-500/10 rounded-sm'
-                  : 'text-emerald-600 dark:text-emerald-400 font-semibold';
+                  ? 'text-[var(--typed-text)] font-semibold bg-emerald-500/15 rounded-md border border-emerald-500/20'
+                  : 'text-[var(--typed-text)] font-semibold';
               } else if (charState === 'incorrect') {
                 stateStyles = showCharBoxes
-                  ? 'text-rose-600 dark:text-rose-400 font-bold bg-rose-500/25 dark:bg-rose-500/20 underline decoration-rose-500 rounded-sm'
+                  ? 'text-rose-600 dark:text-rose-400 font-bold bg-rose-500/25 underline decoration-rose-500 rounded-md border border-rose-500/30'
                   : 'text-rose-600 dark:text-rose-400 font-bold underline decoration-rose-500';
               }
 
@@ -88,17 +99,17 @@ export function TypingCanvas() {
                 <span
                   key={globalIdx}
                   className={cn(
-                    'relative transition-colors duration-100 px-[1px]',
+                    'relative transition-colors duration-150 px-[2px] py-[1px]',
                     stateStyles,
                     isCurrent && (showActiveHighlight
-                      ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-white font-bold ring-2 ring-emerald-400 rounded-sm'
-                      : 'text-zinc-900 dark:text-white font-bold'
+                      ? 'bg-[var(--bg-card-hover)] text-[var(--text-main)] font-bold ring-2 ring-[var(--brand-emerald)] rounded-md shadow-sm'
+                      : 'text-[var(--text-main)] font-bold'
                     )
                   )}
                 >
                   {/* Caret Line */}
                   {isCurrent && (
-                    <span className="absolute -left-[1px] top-0 bottom-0 w-[3px] bg-emerald-400 animate-caret rounded-full shadow-[0_0_8px_#10b981]" />
+                    <span className="absolute -left-[1px] top-0 bottom-0 w-[3px] bg-[var(--caret-color)] animate-caret rounded-full shadow-[0_0_10px_var(--caret-color)]" />
                   )}
                   {char === ' ' ? '\u00A0' : char}
                 </span>
@@ -108,13 +119,16 @@ export function TypingCanvas() {
         ))}
       </div>
 
+
       {/* Completion Overlay */}
       {matchState.isCompleted && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-zinc-950/90 backdrop-blur-md">
-          <div className="text-center space-y-4">
-            <div className="text-4xl">🎉</div>
-            <h3 className="text-2xl font-bold text-emerald-400">Copywork Completed!</h3>
-            <p className="text-sm text-zinc-400">Great job! Check your stats summary below.</p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center rounded-3xl bg-zinc-950/90 dark:bg-zinc-950/90 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="text-center space-y-4 max-w-sm px-6">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-2xl">
+              <CheckCircle2 className="h-8 w-8" />
+            </div>
+            <h3 className="text-3xl font-extrabold text-white tracking-tight">Copywork Completed!</h3>
+            <p className="text-sm text-zinc-400">Excellent precision! Review your performance metrics below.</p>
           </div>
         </div>
       )}

@@ -34,7 +34,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         set({ user });
         await get().refreshHistoryAndStats();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to initialize auth:', err);
     } finally {
       set({ isLoading: false });
@@ -48,8 +48,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const user = await localDbAdapter.login(username, passHash);
       set({ user, error: null });
       await get().refreshHistoryAndStats();
-    } catch (err: any) {
-      set({ error: err.message || 'Login failed' });
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'Login failed';
+      set({ error: errMsg });
       throw err;
     } finally {
       set({ isLoading: false });
@@ -63,13 +64,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const user = await localDbAdapter.signup(username, passHash);
       set({ user, error: null });
       await get().refreshHistoryAndStats();
-    } catch (err: any) {
-      set({ error: err.message || 'Signup failed' });
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'Signup failed';
+      set({ error: errMsg });
       throw err;
     } finally {
       set({ isLoading: false });
     }
   },
+
 
   logout: async () => {
     await localDbAdapter.logout();

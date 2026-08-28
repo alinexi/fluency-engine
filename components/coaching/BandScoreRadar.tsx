@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { EvalResult } from '@/lib/plugins/types';
-import { Award, CheckCircle } from 'lucide-react';
+import { Award } from 'lucide-react';
 
 interface BandScoreRadarProps {
   result: EvalResult;
@@ -19,34 +19,35 @@ export function BandScoreRadar({ result }: BandScoreRadarProps) {
   ];
 
   return (
-    <div className="rounded-2xl border border-violet-500/30 bg-zinc-900/90 p-8 backdrop-blur-xl space-y-6 shadow-2xl">
+    <div className="rounded-2xl border border-violet-500/30 bg-[var(--bg-card)] p-8 backdrop-blur-xl space-y-6 shadow-2xl">
       
       {/* Header Band Score Badge */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-600/20 text-violet-400 border border-violet-500/30">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-600/20 text-[var(--brand-violet)] border border-violet-500/30">
             <Award className="h-8 w-8" />
           </div>
           <div>
-            <div className="text-xs font-mono uppercase text-violet-400 font-bold tracking-wider">
+            <div className="text-xs font-mono uppercase text-[var(--brand-violet)] font-bold tracking-wider">
               {result.examMode.toUpperCase()} EXAMINER REPORT
             </div>
-            <h2 className="text-2xl font-extrabold text-white">Overall Band Score</h2>
+            <h2 className="text-2xl font-extrabold text-[var(--text-main)]">Overall Band Score</h2>
           </div>
         </div>
 
-        <div className="flex items-baseline gap-1 bg-zinc-950 px-6 py-3 rounded-2xl border border-violet-500/40">
-          <span className="text-4xl font-extrabold font-mono text-violet-400">{result.overallBand}</span>
-          <span className="text-sm font-mono text-zinc-400">/ {result.overallMax || 9}</span>
+        <div className="flex items-baseline gap-1 bg-[var(--bg-input)] px-6 py-3 rounded-2xl border border-violet-500/40">
+          <span className="text-4xl font-extrabold font-mono text-[var(--brand-violet)]">{result.overallBand}</span>
+          <span className="text-sm font-mono text-[var(--text-subtle)]">/ {result.overallMax || 9}</span>
         </div>
       </div>
 
       {/* Summary Feedback */}
-      <div className="rounded-xl bg-zinc-950/60 p-4 border border-zinc-800">
-        <p className="text-sm text-zinc-300 leading-relaxed italic">
-          "{result.summaryFeedback}"
+      <div className="rounded-xl bg-[var(--bg-input)] p-4 border border-[var(--border-color)]">
+        <p className="text-sm text-[var(--text-main)] leading-relaxed italic">
+          &ldquo;{result.summaryFeedback}&rdquo;
         </p>
       </div>
+
 
       {/* Four Sub-Criteria Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -64,4 +65,5 @@ export function BandScoreRadar({ result }: BandScoreRadarProps) {
 
     </div>
   );
+
 }

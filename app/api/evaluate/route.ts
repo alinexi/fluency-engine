@@ -28,11 +28,13 @@ export async function POST(req: NextRequest) {
     );
 
     return NextResponse.json(result);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error in /api/evaluate route:', err);
+    const errMsg = err instanceof Error ? err.message : 'Internal server error during essay evaluation';
     return NextResponse.json(
-      { error: err.message || 'Internal server error during essay evaluation' },
+      { error: errMsg },
       { status: 500 }
     );
   }
+
 }

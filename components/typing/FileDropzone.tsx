@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Upload, FileText, Sparkles, BookOpen } from 'lucide-react';
+import { Upload, BookOpen } from 'lucide-react';
 import { useStudioStore } from '@/store/studioStore';
 import { useRouter } from 'next/navigation';
 
@@ -58,8 +58,8 @@ export function FileDropzone() {
         onDrop={handleDrop}
         className={`relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-10 text-center transition-all duration-200 cursor-pointer ${
           dragActive
-            ? 'border-emerald-400 bg-emerald-500/10 scale-[1.01]'
-            : 'border-zinc-800 bg-zinc-900/40 hover:border-emerald-500/40 hover:bg-zinc-900/70'
+            ? 'border-[var(--brand-emerald)] bg-emerald-500/10 scale-[1.01]'
+            : 'border-[var(--border-color)] bg-[var(--bg-card)] hover:border-[var(--brand-emerald)]/60 hover:bg-[var(--bg-card-hover)]'
         }`}
       >
         <input
@@ -69,13 +69,13 @@ export function FileDropzone() {
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
 
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-4">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-[var(--brand-emerald)] border border-emerald-500/20 mb-4">
           <Upload className="h-6 w-6" />
         </div>
 
-        <h3 className="text-lg font-semibold text-white">Drop a .txt file here</h3>
-        <p className="mt-1 text-sm text-zinc-400">or click to browse from your computer</p>
-        <span className="mt-3 inline-block rounded-full bg-zinc-800/80 px-3 py-1 text-xs font-mono text-zinc-400">
+        <h3 className="text-lg font-semibold text-[var(--text-main)]">Drop a .txt file here</h3>
+        <p className="mt-1 text-sm text-[var(--text-muted)]">or click to browse from your computer</p>
+        <span className="mt-3 inline-block rounded-full bg-[var(--bg-input)] border border-[var(--border-color)] px-3 py-1 text-xs font-mono text-[var(--text-subtle)]">
           Max file size: 500 KB · Pure client-side parsing
         </span>
       </div>
@@ -83,8 +83,8 @@ export function FileDropzone() {
       {/* Preset Sample Copywork Files */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <BookOpen className="h-4 w-4 text-emerald-400" />
-          <h4 className="text-sm font-semibold text-zinc-300">Or try a preset sample text:</h4>
+          <BookOpen className="h-4 w-4 text-[var(--brand-emerald)]" />
+          <h4 className="text-sm font-semibold text-[var(--text-main)]">Or try a preset sample text:</h4>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
@@ -95,17 +95,17 @@ export function FileDropzone() {
                 loadText(sample.content, sample.title);
                 router.push('/studio/session');
               }}
-              className="flex flex-col justify-between rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-left transition-all hover:border-emerald-500/40 hover:bg-zinc-800/60 group"
+              className="flex flex-col justify-between rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-4 text-left transition-all hover:border-[var(--brand-emerald)]/50 hover:bg-[var(--bg-card-hover)] group"
             >
               <div>
-                <h5 className="font-semibold text-white text-sm group-hover:text-emerald-400 transition-colors">
+                <h5 className="font-semibold text-[var(--text-main)] text-sm group-hover:text-[var(--brand-emerald)] transition-colors">
                   {sample.title}
                 </h5>
-                <p className="mt-2 text-xs text-zinc-400 line-clamp-3 leading-relaxed">
-                  "{sample.content}"
+                <p className="mt-2 text-xs text-[var(--text-muted)] line-clamp-3 leading-relaxed">
+                  &ldquo;{sample.content}&rdquo;
                 </p>
               </div>
-              <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-emerald-400">
+              <div className="mt-4 flex items-center justify-between text-[11px] font-mono text-[var(--brand-emerald)]">
                 <span>{sample.content.length} chars</span>
                 <span className="group-hover:translate-x-0.5 transition-transform">Start →</span>
               </div>
@@ -116,3 +116,5 @@ export function FileDropzone() {
     </div>
   );
 }
+
+

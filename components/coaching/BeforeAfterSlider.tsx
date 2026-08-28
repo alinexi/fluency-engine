@@ -12,24 +12,24 @@ export function BeforeAfterSlider({ originalText, suggestedText }: BeforeAfterSl
   const [sliderPos, setSliderPos] = useState(50); // 0% = Original, 100% = Band 9 Rewrite
 
   return (
-    <div className="space-y-3 rounded-xl border border-violet-500/20 bg-zinc-950/80 p-5">
+    <div className="space-y-3 rounded-xl border border-violet-500/20 bg-[var(--bg-input)] p-5">
       <div className="flex items-center justify-between text-xs font-mono">
-        <span className="text-rose-400 font-semibold">YOUR ORIGINAL</span>
-        <span className="flex items-center gap-1 text-zinc-400">
-          <SlidersHorizontal className="h-3.5 w-3.5 text-violet-400" />
+        <span className="text-rose-500 font-semibold">YOUR ORIGINAL</span>
+        <span className="flex items-center gap-1 text-[var(--text-subtle)]">
+          <SlidersHorizontal className="h-3.5 w-3.5 text-[var(--brand-violet)]" />
           Drag to compare ({sliderPos}%)
         </span>
-        <span className="text-emerald-400 font-semibold">BAND 9 REWRITE</span>
+        <span className="text-emerald-500 font-semibold">BAND 9 REWRITE</span>
       </div>
 
       {/* Comparison Text Container */}
-      <div className="relative overflow-hidden rounded-lg bg-zinc-900 p-4 min-h-[80px] border border-zinc-800 text-sm font-serif leading-relaxed">
+      <div className="relative overflow-hidden rounded-lg bg-[var(--bg-card)] p-4 min-h-[80px] border border-[var(--border-color)] text-sm font-serif leading-relaxed">
         {/* Original Text Layer */}
         <div
           className="transition-opacity duration-150"
           style={{ opacity: 1 - sliderPos / 100 }}
         >
-          <span className="text-rose-300 font-medium">{originalText}</span>
+          <span className="text-rose-600 dark:text-rose-300 font-medium">{originalText}</span>
         </div>
 
         {/* Suggested Text Layer (Overlaid) */}
@@ -37,7 +37,7 @@ export function BeforeAfterSlider({ originalText, suggestedText }: BeforeAfterSl
           className="absolute inset-0 p-4 transition-opacity duration-150"
           style={{ opacity: sliderPos / 100 }}
         >
-          <span className="text-emerald-300 font-semibold">{suggestedText}</span>
+          <span className="text-emerald-600 dark:text-emerald-300 font-semibold">{suggestedText}</span>
         </div>
       </div>
 
@@ -48,8 +48,9 @@ export function BeforeAfterSlider({ originalText, suggestedText }: BeforeAfterSl
         max="100"
         value={sliderPos}
         onChange={(e) => setSliderPos(Number(e.target.value))}
-        className="w-full h-1.5 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-violet-500"
+        className="w-full h-1.5 bg-[var(--border-color)] rounded-lg appearance-none cursor-pointer accent-violet-500"
       />
     </div>
   );
+
 }

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
-import { User, Lock, ArrowRight, ShieldCheck, UserPlus, LogIn, AlertCircle } from 'lucide-react';
+import { User, Lock, ShieldCheck, UserPlus, LogIn, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
   const { user, login, signup, isLoading, error } = useAuthStore();
@@ -52,39 +52,41 @@ export default function LoginPage() {
         await signup(username.trim(), password);
       }
       router.push('/profile');
-    } catch (err: any) {
-      setFormError(err.message || 'Authentication failed');
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : 'Authentication failed';
+      setFormError(errMsg);
     }
   };
+
 
   return (
     <div className="py-12 max-w-md mx-auto px-4 w-full flex-1 flex flex-col justify-center">
       
       {/* Brand Header */}
       <div className="text-center space-y-2 mb-8">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-violet-600 text-zinc-950 font-mono font-extrabold text-xl shadow-lg">
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-violet-600 text-white font-mono font-extrabold text-xl shadow-lg">
           FC
         </div>
-        <h1 className="text-2xl font-extrabold text-zinc-900 dark:text-white">
+        <h1 className="text-2xl font-extrabold text-[var(--text-main)]">
           {isLoginTab ? 'Welcome Back to FluencyEngine' : 'Create Your Profile'}
         </h1>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+        <p className="text-xs text-[var(--text-muted)]">
           {isLoginTab ? 'Sign in to access your test history and progress stats.' : 'Register a profile to save your copywork & AI essay reports.'}
         </p>
       </div>
 
       {/* Auth Card */}
-      <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-6 backdrop-blur-xl shadow-xl space-y-6">
+      <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 backdrop-blur-xl shadow-xl space-y-6">
         
         {/* Tab Switcher */}
-        <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-xs font-semibold">
+        <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-[var(--bg-input)] border border-[var(--border-color)] text-xs font-semibold">
           <button
             type="button"
             onClick={() => { setIsLoginTab(true); setFormError(null); }}
             className={`py-2 rounded-lg transition-all ${
               isLoginTab
-                ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm font-bold'
-                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
+                ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-sm font-bold border border-[var(--border-color)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
             }`}
           >
             Log In
@@ -94,8 +96,8 @@ export default function LoginPage() {
             onClick={() => { setIsLoginTab(false); setFormError(null); }}
             className={`py-2 rounded-lg transition-all ${
               !isLoginTab
-                ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm font-bold'
-                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-white'
+                ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-sm font-bold border border-[var(--border-color)]'
+                : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
             }`}
           >
             Sign Up
@@ -104,7 +106,7 @@ export default function LoginPage() {
 
         {/* Form Error */}
         {(formError || error) && (
-          <div className="flex items-center gap-2 rounded-xl bg-rose-500/10 p-3.5 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs">
+          <div className="flex items-center gap-2 rounded-xl bg-rose-500/10 p-3.5 border border-rose-500/20 text-rose-500 text-xs">
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{formError || error}</span>
           </div>
@@ -114,8 +116,8 @@ export default function LoginPage() {
           
           {/* Username Input */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
-              <User className="h-3.5 w-3.5 text-emerald-500" /> Username
+            <label className="text-xs font-mono text-[var(--text-muted)] flex items-center gap-1.5">
+              <User className="h-3.5 w-3.5 text-[var(--brand-emerald)]" /> Username
             </label>
             <input
               type="text"
@@ -123,14 +125,14 @@ export default function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="e.g. john_doe"
-              className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-4 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-emerald-500 focus:outline-none font-mono"
+              className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--bg-input)] px-4 py-2.5 text-sm text-[var(--text-main)] placeholder-[var(--text-subtle)] focus:border-[var(--brand-emerald)] focus:outline-none font-mono"
             />
           </div>
 
           {/* Password Input */}
           <div className="space-y-1.5">
-            <label className="text-xs font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
-              <Lock className="h-3.5 w-3.5 text-violet-500" /> Password
+            <label className="text-xs font-mono text-[var(--text-muted)] flex items-center gap-1.5">
+              <Lock className="h-3.5 w-3.5 text-[var(--brand-violet)]" /> Password
             </label>
             <input
               type="password"
@@ -138,15 +140,15 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-4 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-violet-500 focus:outline-none font-mono"
+              className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--bg-input)] px-4 py-2.5 text-sm text-[var(--text-main)] placeholder-[var(--text-subtle)] focus:border-[var(--brand-violet)] focus:outline-none font-mono"
             />
           </div>
 
           {/* Confirm Password (Signup only) */}
           {!isLoginTab && (
             <div className="space-y-1.5">
-              <label className="text-xs font-mono text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
-                <Lock className="h-3.5 w-3.5 text-violet-500" /> Confirm Password
+              <label className="text-xs font-mono text-[var(--text-muted)] flex items-center gap-1.5">
+                <Lock className="h-3.5 w-3.5 text-[var(--brand-violet)]" /> Confirm Password
               </label>
               <input
                 type="password"
@@ -154,7 +156,7 @@ export default function LoginPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-4 py-2.5 text-sm text-zinc-900 dark:text-white placeholder-zinc-400 focus:border-violet-500 focus:outline-none font-mono"
+                className="w-full rounded-xl border border-[var(--border-color)] bg-[var(--bg-input)] px-4 py-2.5 text-sm text-[var(--text-main)] placeholder-[var(--text-subtle)] focus:border-[var(--brand-violet)] focus:outline-none font-mono"
               />
             </div>
           )}
@@ -179,8 +181,8 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="pt-2 text-center text-[11px] text-zinc-500 flex items-center justify-center gap-1">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+        <div className="pt-2 text-center text-[11px] text-[var(--text-subtle)] flex items-center justify-center gap-1">
+          <ShieldCheck className="h-3.5 w-3.5 text-[var(--brand-emerald)]" />
           <span>SHA-256 Web Crypto Hashed · Pluggable DB Adapter Ready</span>
         </div>
       </div>
@@ -188,3 +190,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
