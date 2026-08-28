@@ -1,0 +1,65 @@
+Here is a revised Product Requirements Document (PRD) designed specifically for an open-source release.
+
+This version introduces a **modular architecture**, ensuring the core app remains lightweight for strict string-matching (MVP), while laying the groundwork for a pluggable AI coaching layer later.
+
+---
+
+# Product Requirements Document (PRD)
+
+### **Project:** TypeCoach OS (Open-Source Grammar & Typing Tutor)
+
+**Document Version:** 2.0
+**Focus:** Extensible Architecture, AI-Assisted Coaching, Open Source Community
+
+## 1.0 Product Vision
+
+To build the premier open-source typing and language learning platform. It begins as a localized, precise "copywork" engine for transcribing `.txt` files to build muscle memory, and scales into a comprehensive, AI-powered writing coach capable of simulating IELTS/TOEFL examinations and providing highly engaging, contextual feedback.
+
+## 2.0 Architectural Strategy: The "Pluggable" Core
+
+To support future APIs without bloating the initial build, the architecture must be modular from day one. A React/Next.js stack is ideal for this, allowing for strict separation of concerns:
+
+* **Module A: The Typing Engine (Client-Side):** Handles keystroke interception, string-matching logic against the `.txt` source, caret positioning, and WPM/Accuracy calculations. This runs entirely in the browser.
+* **Module B: The Prompt Engine (Server-Side/API Route):** A decoupled layer built to handle future integrations (e.g., OpenAI, Anthropic, or local LLMs).
+* **Bring Your Own Key (BYOK):** For the open-source community, the platform will allow users to input their own API keys in the settings to unlock the IELTS/TOEFL coaching features, keeping the repository free to host and use.
+
+## 3.0 Core Features & User Workflows
+
+### 3.1 Phase 1: The "Copywork" MVP (No API Required)
+
+| Feature | Description |
+| --- | --- |
+| **Local .txt Upload** | Users drop a `.txt` file into the UI. The engine parses it into typing blocks. |
+| **Strict-Match Engine** | The core loop. The user types the text exactly. The engine halts progression on typos to enforce correct grammar output. |
+| **Session Analytics** | Local storage tracking for WPM, accuracy, and daily streaks. |
+
+### 3.2 Phase 2: Free-Typing & The AI Examiner (API Integrated)
+
+| Feature | Description |
+| --- | --- |
+| **Free-Typing Mode** | Users respond to an IELTS/TOEFL prompt (e.g., "Discuss the impact of technology on education") on a blank canvas. |
+| **The Coaching Request** | Upon completion, the text is sent via the API layer to an LLM, structured with a strict system prompt to act as a certified IELTS/TOEFL examiner. |
+| **Multi-Agent Evaluation** | The API returns a structured JSON payload scoring specific criteria: Task Achievement, Coherence & Cohesion, Lexical Resource, and Grammatical Range. |
+
+## 4.0 "Creative & Attractive" Feedback Design (UI/UX)
+
+Standard grammar checkers use boring red underlines. TypeCoach OS will use a highly visual, gamified, and modern approach to make feedback exciting:
+
+* **The "Coach's Desk" UI:** Instead of a standard pop-up, feedback slides in as "Coaching Cards." These cards break down a clunky sentence visually.
+* **Before & After Sliders:** When the API suggests a better sentence structure, the user can grab a vertical UI slider to drag back and forth between their original sentence and the AI's IELTS Band 9 suggestion, watching the words rearrange in real-time.
+* **Vocabulary Heatmaps:** After a free-typing session, the text is highlighted in a thermal heatmap. Common/A1 words are cool blue; advanced C1/C2 vocabulary is hot orange. The user instantly sees if their writing is too basic.
+* **Syntax Trees:** For major grammar corrections, display a beautifully animated, simplified syntax tree showing exactly where the sentence broke down (e.g., highlighting the disconnect between a subject and a distant verb).
+
+## 5.0 Open Source & Community Strategy
+
+* **Component Library UI:** Built with a utility-first CSS framework (like Tailwind) and headless UI components, making it incredibly easy for contributors to theme or redesign.
+* **Plugin System:** The AI coaching layer should be written as an interface. Contributors can write plugins for different models (e.g., an OpenAI plugin, an Ollama plugin for local LLMs, or a DeepSeek plugin).
+* **Public Prompt Repository:** A community-driven folder in the repo containing `.json` files of the best system prompts for different grading styles (e.g., `ielts-strict.json`, `creative-writing.json`, `business-email.json`).
+
+## 6.0 Success Metrics for Open Source Release
+
+* **GitHub Stars & Forks:** Initial gauge of community interest.
+* **Time-to-First-PR:** How quickly the architecture allows a new contributor to submit a meaningful pull request.
+* **Plugin Adoption:** The number of community-created prompts and API integrations submitted to the repository.
+
+---

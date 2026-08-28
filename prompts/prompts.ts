@@ -1,0 +1,61 @@
+import { PromptItem } from '@/store/coachStore';
+
+export const PROMPT_CATALOG: PromptItem[] = [
+  {
+    id: 'ielts-1',
+    mode: 'ielts-task2',
+    title: 'Technology & Education',
+    promptText: 'Some people believe that computers and the internet are replacing the role of teachers in education. To what extent do you agree or disagree?',
+    timeLimitMinutes: 40,
+    minWords: 250,
+  },
+  {
+    id: 'ielts-2',
+    mode: 'ielts-task2',
+    title: 'Urbanisation & Environment',
+    promptText: 'Many cities worldwide are expanding rapidly. What problems does this cause, and what solutions can governments implement?',
+    timeLimitMinutes: 40,
+    minWords: 250,
+  },
+  {
+    id: 'toefl-1',
+    mode: 'toefl-independent',
+    title: 'Personal Decision Making',
+    promptText: 'Do you agree or disagree with the following statement? It is better to make decisions quickly than to take a long time to deliberate.',
+    timeLimitMinutes: 30,
+    minWords: 300,
+  },
+  {
+    id: 'toefl-2',
+    mode: 'toefl-integrated',
+    title: 'Renewable Energy Systems',
+    promptText: 'Summarize the lecture points on solar grid storage feasibility and explain how they challenge the reading passage claims.',
+    timeLimitMinutes: 20,
+    minWords: 150,
+    maxWords: 225,
+  },
+  {
+    id: 'acad-b1',
+    mode: 'academic-b1',
+    title: 'Study Habits & Success (B1 Target)',
+    promptText: 'Describe your routine for preparing for exams. Explain why these habits help you learn effectively.',
+    timeLimitMinutes: 25,
+    minWords: 180,
+  },
+  {
+    id: 'acad-b2',
+    mode: 'academic-b2',
+    title: 'Remote Work Advantages (B2 Target)',
+    promptText: 'Discuss the advantages and disadvantages of remote working for both employees and employers. Support your view with examples.',
+    timeLimitMinutes: 35,
+    minWords: 220,
+  },
+  {
+    id: 'acad-c1',
+    mode: 'academic-c1',
+    title: 'Ethical Implications of AI (C1 Target)',
+    promptText: 'Critically analyze the socio-economic and ethical ramifications of deploying autonomous AI agents in high-stakes domain decisions.',
+    timeLimitMinutes: 45,
+    minWords: 350,
+  },
+];

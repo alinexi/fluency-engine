@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-main: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --border-color: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    
+    --studio-neon: #10b981; /* Emerald */
+    --coach-violet: #8b5cf6; /* Violet */
+    --accent-amber: #f59e0b;
+    --accent-red: #ef4444;
+
+    --font-mono: var(--font-geist-mono), monospace;
+  }
+
+  html.dark {
+    --bg-main: #09090b;
+    --bg-card: #121217;
+    --bg-card-hover: #1a1a22;
+    --border-color: #27273a;
+    --text-main: #f4f4f5;
+    --text-muted: #a1a1aa;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
+
+/* Caret blinking animation */
+@keyframes caretBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-caret {
+  animation: caretBlink 1s infinite ease-in-out;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(18, 18, 23, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html.light .glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* CEFR Vocabulary Heatmap styles */
+.cefr-A1, .cefr-A2 {
+  color: #6366f1;
+  background: rgba(99, 102, 241, 0.12);
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.cefr-B1, .cefr-B2 {
+  color: #d97706;
+  background: rgba(245, 158, 11, 0.15);
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.25rem;
+}
+
+.cefr-C1, .cefr-C2 {
+  color: #ea580c;
+  font-weight: 600;
+  background: rgba(249, 115, 22, 0.2);
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.25rem;
+}
