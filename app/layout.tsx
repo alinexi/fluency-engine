@@ -17,6 +17,14 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Fluency Engine — Open Source Grammar & Typing Tutor',
   description: 'Copywork muscle-memory typing engine and AI-powered IELTS/TOEFL writing coach.',
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-icon.png' }],
+  },
 };
 
 export default function RootLayout({

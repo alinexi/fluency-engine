@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { User, Lock, ShieldCheck, UserPlus, LogIn, AlertCircle } from 'lucide-react';
 
 export default function LoginPage() {
@@ -64,8 +65,15 @@ export default function LoginPage() {
       
       {/* Brand Header */}
       <div className="text-center space-y-2 mb-8">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-violet-600 text-white font-mono font-extrabold text-xl shadow-lg">
-          FC
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--bg-card)] p-2 border border-[var(--border-color)] shadow-lg shadow-emerald-500/10">
+          <Image
+            src="/logo-svg.svg"
+            alt="FluencyEngine Logo"
+            width={56}
+            height={56}
+            className="h-full w-full object-contain"
+            priority
+          />
         </div>
         <h1 className="text-2xl font-extrabold text-[var(--text-main)]">
           {isLoginTab ? 'Welcome Back to FluencyEngine' : 'Create Your Profile'}

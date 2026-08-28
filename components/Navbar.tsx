@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Keyboard, Sparkles, Settings, Sun, Moon, Coffee, User, Library } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -29,8 +30,15 @@ export function Navbar() {
         
         {/* Brand Logo */}
         <Link href="/" className="group flex items-center gap-3 tracking-tight focus-visible:outline-none">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-violet-600 text-white font-mono font-black text-sm shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
-            FC
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--bg-input)] p-1 border border-[var(--border-color)] shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-transform duration-200 overflow-hidden">
+            <Image
+              src="/logo-svg.svg"
+              alt="FluencyEngine Logo"
+              width={36}
+              height={36}
+              className="h-full w-full object-contain"
+              priority
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-base font-extrabold text-[var(--text-main)] tracking-tight flex items-center gap-1">
