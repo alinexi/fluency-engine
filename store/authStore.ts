@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { UserProfile, UserStats, StudioHistoryRecord, CoachHistoryRecord } from '@/lib/db/types';
-import { localDbAdapter, hashPassword } from '@/lib/db/localAdapter';
+import { hashPassword } from '@/lib/db/localAdapter';
+import { getDbAdapter } from '@/lib/db/getAdapter';
 
 interface AuthState {
   user: UserProfile | null;
@@ -29,7 +30,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   initializeAuth: async () => {
     set({ isLoading: true, error: null });
     try {
-      const user = await localDbAdapter.getCurrentUser();
+      const adapter = getDbAdapter();
+      const user = await adapter.getCurrentUser();
       if (user) {
         set({ user });
         await get().refreshHistoryAndStats();
@@ -44,8 +46,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   login: async (username, password) => {
     set({ isLoading: true, error: null });
     try {
+      const adapter = getDbAdapter();
       const passHash = await hashPassword(password);
-      const user = await localDbAdapter.login(username, passHash);
+      const user = await adapter.login(username, passHash);
       set({ user, error: null });
       await get().refreshHistoryAndStats();
     } catch (err: unknown) {
@@ -60,8 +63,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   signup: async (username, password) => {
     set({ isLoading: true, error: null });
     try {
+      const adapter = getDbAdapter();
       const passHash = await hashPassword(password);
-      const user = await localDbAdapter.signup(username, passHash);
+      const user = await adapter.signup(username, passHash);
       set({ user, error: null });
       await get().refreshHistoryAndStats();
     } catch (err: unknown) {
@@ -73,18 +77,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-
   logout: async () => {
-    await localDbAdapter.logout();
+    const adapter = getDbAdapter();
+    await adapter.logout();
     set({ user: null, stats: null, studioHistory: [], coachHistory: [], error: null });
   },
 
   refreshHistoryAndStats: async () => {
     const user = get().user;
     if (!user) return;
-    const stats = await localDbAdapter.getUserStats(user.id);
-    const studioHistory = await localDbAdapter.getStudioHistory(user.id);
-    const coachHistory = await localDbAdapter.getCoachHistory(user.id);
+    const adapter = getDbAdapter();
+    const stats = await adapter.getUserStats(user.id);
+    const studioHistory = await adapter.getStudioHistory(user.id);
+    const coachHistory = await adapter.getCoachHistory(user.id);
     set({ stats, studioHistory, coachHistory });
   },
 }));

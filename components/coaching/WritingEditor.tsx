@@ -77,10 +77,11 @@ export function WritingEditor() {
 
       // Auto-save to user profile database if logged in
       const { useAuthStore } = await import('@/store/authStore');
-      const { localDbAdapter } = await import('@/lib/db/localAdapter');
+      const { getDbAdapter } = await import('@/lib/db/getAdapter');
       const user = useAuthStore.getState().user;
       if (user) {
-        await localDbAdapter.saveCoachResult({
+        const db = getDbAdapter();
+        await db.saveCoachResult({
           userId: user.id,
           promptTitle: activePrompt?.title || 'Custom Essay',
           examMode: selectedMode,

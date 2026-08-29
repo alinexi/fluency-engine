@@ -146,11 +146,12 @@ export const useStudioStore = create<StudioState>((set, get) => ({
         const { activePromptId } = get();
         Promise.all([
           import('./authStore'),
-          import('@/lib/db/localAdapter'),
-        ]).then(([{ useAuthStore }, { localDbAdapter }]) => {
+          import('@/lib/db/getAdapter'),
+        ]).then(([{ useAuthStore }, { getDbAdapter }]) => {
           const user = useAuthStore.getState().user;
           if (user && finalMetrics) {
-            localDbAdapter.saveStudioSession({
+            const db = getDbAdapter();
+            db.saveStudioSession({
               userId: user.id,
               title: parsedText.title,
               date: newSession.date,
