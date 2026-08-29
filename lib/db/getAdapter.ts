@@ -3,8 +3,10 @@ import { localDbAdapter } from './localAdapter';
 import { supabaseDbAdapter } from './supabaseAdapter';
 
 export function getDbAdapter(): DatabaseAdapter {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const rawUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim();
+  const key = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '').trim();
+
+  const url = rawUrl.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
 
   if (url && key && url !== 'https://placeholder.supabase.co') {
     return supabaseDbAdapter;
