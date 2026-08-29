@@ -63,13 +63,15 @@ function HighlightedText({
       parts.push(
         <span
           key={span.start}
-          title={`${v.cefr} — ${v.explanation}`}
           className="relative group cursor-help"
         >
-          <span className="underline decoration-amber-400/70 decoration-2 underline-offset-2 text-amber-400 font-semibold">{segText}</span>
-          <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 rounded-xl border border-amber-400/30 bg-[var(--bg-card)] p-2.5 text-[11px] text-[var(--text-main)] shadow-xl opacity-0 group-hover:opacity-100 transition-opacity z-20 leading-snug">
-            <span className="block font-bold text-amber-400 mb-0.5">{v.cefr} · {segText}</span>
-            {v.explanation}
+          <span className="underline decoration-[var(--brand-amber)]/70 decoration-2 underline-offset-2 text-[var(--brand-amber)] font-bold">{segText}</span>
+          <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-3 text-xs text-[var(--text-main)] shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity z-30 leading-snug">
+            <span className="flex items-center justify-between font-bold text-[var(--brand-amber)] mb-1">
+              <span>{segText}</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[var(--brand-amber)]/10 border border-[var(--brand-amber)]/20">{v.cefr}</span>
+            </span>
+            <span className="text-[var(--text-muted)] text-[11px] block">{v.explanation}</span>
           </span>
         </span>
       );
@@ -78,13 +80,12 @@ function HighlightedText({
       parts.push(
         <span
           key={span.start}
-          title={`${s.label} — ${s.explanation}`}
           className="relative group cursor-help"
         >
-          <span className="underline decoration-violet-400/60 decoration-dotted decoration-2 underline-offset-2 text-[var(--text-main)]">{segText}</span>
-          <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-60 rounded-xl border border-violet-400/30 bg-[var(--bg-card)] p-2.5 text-[11px] text-[var(--text-main)] shadow-xl opacity-0 group-hover:opacity-100 transition-opacity z-20 leading-snug">
-            <span className="block font-bold text-violet-400 mb-0.5">{s.label}</span>
-            {s.explanation}
+          <span className="underline decoration-[var(--brand-violet)]/60 decoration-dashed decoration-2 underline-offset-2 text-[var(--text-main)] font-medium">{segText}</span>
+          <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 rounded-xl border border-[var(--border-color)] bg-[var(--bg-card)] p-3 text-xs text-[var(--text-main)] shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity z-30 leading-snug">
+            <span className="block font-bold text-[var(--brand-violet)] mb-1">{s.label}</span>
+            <span className="text-[var(--text-muted)] text-[11px] block">{s.explanation}</span>
           </span>
         </span>
       );
@@ -106,9 +107,9 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
 
   if (!prompt) {
     return (
-      <div className="py-20 text-center text-[var(--text-muted)]">
+      <div className="py-20 text-center text-[var(--text-muted)] space-y-4">
         <p className="text-lg font-semibold">Prompt not found.</p>
-        <Link href="/library" className="mt-4 inline-block text-sm text-[var(--brand-emerald)] hover:underline">← Back to Library</Link>
+        <Link href="/library" className="inline-block text-sm font-bold text-[var(--brand-emerald)] hover:underline">← Back to Library</Link>
       </div>
     );
   }
@@ -147,9 +148,9 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
           </div>
 
           {/* Main question card */}
-          <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 space-y-4">
+          <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 space-y-4 shadow-sm">
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-[10px] font-mono font-bold text-[var(--brand-emerald)] uppercase tracking-wider">
+              <span className="rounded-full bg-[var(--brand-emerald)]/10 border border-[var(--brand-emerald)]/20 px-3 py-1 text-[10px] font-mono font-bold text-[var(--brand-emerald)] uppercase tracking-wider">
                 {prompt.exam}
               </span>
               <span className="rounded-full bg-[var(--bg-input)] border border-[var(--border-color)] px-3 py-1 text-[10px] font-mono text-[var(--text-subtle)]">
@@ -159,13 +160,13 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
                 ~{prompt.targetWordCount} words
               </span>
             </div>
-            <p className="text-[var(--text-main)] leading-relaxed text-sm">{prompt.promptText}</p>
+            <p className="text-[var(--text-main)] leading-relaxed text-sm font-medium">{prompt.promptText}</p>
           </div>
 
           {/* TOEFL Reading Passage */}
           {prompt.toeflReadingPassage && (
-            <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-indigo-400">
+            <div className="rounded-2xl border border-[var(--brand-violet)]/20 bg-[var(--brand-violet)]/5 p-5 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-[var(--brand-violet)]">
                 <BookOpen className="h-4 w-4" /> READING PASSAGE
               </div>
               <p className="text-sm text-[var(--text-main)] leading-relaxed">{prompt.toeflReadingPassage}</p>
@@ -174,14 +175,14 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
 
           {/* TOEFL Academic Discussion */}
           {prompt.toeflStudentReplies && (
-            <div className="rounded-2xl border border-violet-500/20 bg-violet-500/5 p-5 space-y-4">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-violet-400">
+            <div className="rounded-2xl border border-[var(--brand-violet)]/20 bg-[var(--brand-violet)]/5 p-5 space-y-4">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-[var(--brand-violet)]">
                 <MessageSquare className="h-4 w-4" /> CLASS DISCUSSION
               </div>
               <div className="space-y-3">
                 {/* Professor */}
                 <div className="rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)] p-4">
-                  <div className="text-[10px] font-mono font-bold text-violet-400 mb-1.5">PROFESSOR</div>
+                  <div className="text-[10px] font-mono font-bold text-[var(--brand-violet)] mb-1.5">PROFESSOR</div>
                   <p className="text-sm text-[var(--text-main)] leading-relaxed">{prompt.toeflStudentReplies.professorQuestion}</p>
                 </div>
                 {/* Student A */}
@@ -191,7 +192,7 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
                 </div>
                 {/* Student B */}
                 <div className="rounded-xl bg-[var(--bg-input)] border border-[var(--border-color)] p-4 ml-4">
-                  <div className="text-[10px] font-mono font-bold text-teal-400 mb-1.5">{prompt.toeflStudentReplies.studentB.name.toUpperCase()}</div>
+                  <div className="text-[10px] font-mono font-bold text-[var(--brand-amber)] mb-1.5">{prompt.toeflStudentReplies.studentB.name.toUpperCase()}</div>
                   <p className="text-sm text-[var(--text-main)] leading-relaxed">{prompt.toeflStudentReplies.studentB.text}</p>
                 </div>
               </div>
@@ -200,9 +201,9 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
 
           {/* Prompt Image (IELTS Task 1 charts/maps) */}
           {prompt.promptImageUrl && (
-            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] overflow-hidden">
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-2 overflow-hidden shadow-sm">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={prompt.promptImageUrl} alt="Exam chart or map" className="w-full object-contain max-h-72" />
+              <img src={prompt.promptImageUrl} alt="Exam chart or map" className="w-full object-contain max-h-72 rounded-xl" />
             </div>
           )}
         </div>
@@ -218,17 +219,17 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
           {/* Legend */}
           <div className="flex items-center gap-4 text-[10px] font-mono text-[var(--text-subtle)]">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-0.5 bg-amber-400 rounded" />
+              <span className="inline-block w-3 h-0.5 bg-[var(--brand-amber)] rounded" />
               Vocabulary (C1/C2)
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block w-3 h-0.5 border-t-2 border-dashed border-violet-400 rounded" />
+              <span className="inline-block w-3 h-0.5 border-t-2 border-dashed border-[var(--brand-violet)] rounded" />
               Grammar structure
             </span>
           </div>
 
           {/* Annotated answer */}
-          <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 text-sm text-[var(--text-main)] leading-loose">
+          <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 text-sm text-[var(--text-main)] leading-loose shadow-sm">
             <HighlightedText
               text={prompt.sampleAnswer}
               vocab={prompt.highlightedVocab}
@@ -237,7 +238,7 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
           </div>
 
           {/* Scoring notes callout */}
-          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5 space-y-1.5">
+          <div className="rounded-2xl border border-[var(--brand-emerald)]/30 bg-[var(--brand-emerald)]/5 p-5 space-y-1.5">
             <div className="text-xs font-mono font-bold text-[var(--brand-emerald)]">WHY THIS ANSWER SCORES HIGHLY</div>
             <p className="text-sm text-[var(--text-main)] leading-relaxed">{prompt.scoringNotes}</p>
           </div>
@@ -245,7 +246,7 @@ export default function BriefingRoomPage({ params }: { params: Promise<{ promptI
           {/* CTA */}
           <button
             onClick={handleStart}
-            className="w-full flex items-center justify-center gap-3 rounded-2xl bg-[var(--brand-emerald)] hover:opacity-90 text-white font-bold text-sm py-4 shadow-xl shadow-emerald-500/20 transition-all hover:scale-[1.01] active:scale-[0.99]"
+            className="w-full flex items-center justify-center gap-3 rounded-2xl bg-[var(--brand-emerald)] hover:opacity-90 text-white font-bold text-sm py-4 shadow-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
           >
             <Play className="h-5 w-5 fill-white" />
             Start Typing Practice

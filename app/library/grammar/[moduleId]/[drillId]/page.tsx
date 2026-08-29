@@ -3,8 +3,7 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { use } from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowLeft, ChevronRight, Play, Award, Target, ArrowRight, Zap, Eye, EyeOff, Flame, Layers, RotateCcw } from 'lucide-react';
+import { ArrowLeft, ChevronRight, Award, ArrowRight, Zap, Eye, EyeOff, Flame, Layers, RotateCcw } from 'lucide-react';
 import { GRAMMAR_DRILLS } from '@/lib/grammar/grammarData';
 import { GRAMMAR_MODULES, GrammarModuleId } from '@/lib/grammar/grammarLibrary';
 import { useGrammarStore } from '@/store/grammarStore';
@@ -19,7 +18,6 @@ export default function GrammarDrillSessionPage({
   params: Promise<{ moduleId: string; drillId: string }>;
 }) {
   const { moduleId, drillId } = use(params);
-  const router = useRouter();
 
   const moduleInfo = GRAMMAR_MODULES.find(m => m.id === moduleId as GrammarModuleId);
   const drill = GRAMMAR_DRILLS.find(d => d.id === drillId);
@@ -87,9 +85,9 @@ export default function GrammarDrillSessionPage({
 
   if (!drill || !moduleInfo || !currentLevelData) {
     return (
-      <div className="py-20 text-center text-zinc-500">
+      <div className="py-20 text-center text-[var(--text-muted)]">
         <p className="text-lg font-semibold">Drill session not found.</p>
-        <Link href="/library/grammar" className="mt-4 inline-block text-sm text-violet-500 hover:underline">← Back to Grammar Library</Link>
+        <Link href="/library/grammar" className="mt-4 inline-block text-sm text-[var(--brand-violet)] hover:underline">← Back to Grammar Library</Link>
       </div>
     );
   }
@@ -108,9 +106,9 @@ export default function GrammarDrillSessionPage({
   };
 
   const tierBadge = (tier: string) => {
-    if (tier === 'guided') return { label: 'TIER 1 · GUIDED MUSCLE MEMORY', color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' };
-    if (tier === 'fading') return { label: 'TIER 2 · FADING SUPPORT', color: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20' };
-    return { label: 'TIER 3 · STRESS TESTING & EDGE CASES', color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20' };
+    if (tier === 'guided') return { label: 'TIER 1 · GUIDED MUSCLE MEMORY', color: 'bg-[var(--brand-emerald)]/10 text-[var(--brand-emerald)] border-[var(--brand-emerald)]/20' };
+    if (tier === 'fading') return { label: 'TIER 2 · FADING SUPPORT', color: 'bg-[var(--brand-amber)]/10 text-[var(--brand-amber)] border-[var(--brand-amber)]/20' };
+    return { label: 'TIER 3 · STRESS TESTING & EDGE CASES', color: 'bg-rose-500/10 text-rose-500 border-rose-500/20' };
   };
 
   const currentTier = tierBadge(currentLevelData.tier);
@@ -124,29 +122,29 @@ export default function GrammarDrillSessionPage({
     <div className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8">
       
       {/* Breadcrumb Navigation */}
-      <div className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-        <Link href="/library" className="hover:text-violet-500 transition-colors">Library</Link>
+      <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
+        <Link href="/library" className="hover:text-[var(--brand-violet)] transition-colors">Library</Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <Link href="/library/grammar" className="hover:text-violet-500 transition-colors">Grammar Library</Link>
+        <Link href="/library/grammar" className="hover:text-[var(--brand-violet)] transition-colors">Grammar Library</Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <Link href={`/library/grammar/${moduleId}`} className="hover:text-violet-500 transition-colors">{moduleInfo.title}</Link>
+        <Link href={`/library/grammar/${moduleId}`} className="hover:text-[var(--brand-violet)] transition-colors">{moduleInfo.title}</Link>
         <ChevronRight className="h-3.5 w-3.5" />
-        <span className="text-zinc-900 dark:text-white font-bold">{drill.title}</span>
+        <span className="text-[var(--text-main)] font-bold">{drill.title}</span>
       </div>
 
-      <Link href={`/library/grammar/${moduleId}`} className="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-violet-500 transition-colors -mt-4">
+      <Link href={`/library/grammar/${moduleId}`} className="inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--brand-violet)] transition-colors -mt-4">
         <ArrowLeft className="h-3.5 w-3.5" /> Back to {moduleInfo.title}
       </Link>
 
       {/* 30-Level Navigation Bar */}
-      <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-5 space-y-3 backdrop-blur-xl">
+      <div className="rounded-3xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 space-y-3 backdrop-blur-xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <div>
-            <span className="text-xs font-mono font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-              <Layers className="h-4 w-4 text-violet-500" />
+            <span className="text-xs font-mono font-bold text-[var(--text-main)] flex items-center gap-2">
+              <Layers className="h-4 w-4 text-[var(--brand-violet)]" />
               SELECT DRILL LEVEL (1 TO 30)
             </span>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-mono">Free level access · Progressively scales visual scaffolding &amp; sentence complexity</p>
+            <p className="text-[11px] text-[var(--text-muted)] font-mono">Free level access · Progressively scales visual scaffolding &amp; sentence complexity</p>
           </div>
           <span className={cn('rounded-full px-3 py-1 text-[10px] font-mono font-bold border uppercase', currentTier.color)}>
             {currentTier.label}
@@ -157,9 +155,9 @@ export default function GrammarDrillSessionPage({
         <div className="grid grid-cols-10 sm:grid-cols-15 md:grid-cols-30 gap-1.5 pt-1">
           {drill.levels.map((lvl) => {
             const isSelected = lvl.level === currentLevel;
-            let levelColor = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';
-            if (lvl.tier === 'fading') levelColor = 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20';
-            if (lvl.tier === 'stress') levelColor = 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20';
+            let levelColor = 'bg-[var(--brand-emerald)]/10 text-[var(--brand-emerald)] border-[var(--brand-emerald)]/20';
+            if (lvl.tier === 'fading') levelColor = 'bg-[var(--brand-amber)]/10 text-[var(--brand-amber)] border-[var(--brand-amber)]/20';
+            if (lvl.tier === 'stress') levelColor = 'bg-rose-500/10 text-rose-500 border-rose-500/20';
 
             return (
               <button
@@ -168,7 +166,7 @@ export default function GrammarDrillSessionPage({
                 className={cn(
                   'h-8 w-full rounded-lg flex items-center justify-center font-mono text-xs font-bold border transition-all',
                   isSelected
-                    ? 'bg-violet-600 text-white border-violet-500 shadow-md shadow-violet-600/30 scale-105'
+                    ? 'bg-[var(--brand-violet)] text-white border-[var(--brand-violet)] shadow-md shadow-violet-600/30 scale-105'
                     : cn(levelColor, 'hover:scale-105')
                 )}
                 title={`Level ${lvl.level} (${lvl.tier.toUpperCase()} Tier)`}
@@ -188,67 +186,67 @@ export default function GrammarDrillSessionPage({
           <div className="space-y-6 lg:col-span-1">
             
             {/* Header info */}
-            <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-6 space-y-4 backdrop-blur-xl">
+            <div className="rounded-3xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 space-y-4 backdrop-blur-xl">
               <div className="flex items-center justify-between">
-                <span className="rounded-full bg-violet-500/10 border border-violet-500/20 px-3 py-1 text-[10px] font-mono font-bold text-violet-600 dark:text-violet-400 uppercase">
+                <span className="rounded-full bg-[var(--brand-violet)]/10 border border-[var(--brand-violet)]/20 px-3 py-1 text-[10px] font-mono font-bold text-[var(--brand-violet)] uppercase">
                   Level {currentLevel} of 30
                 </span>
-                <span className="text-xs font-mono font-bold text-zinc-500">
+                <span className="text-xs font-mono font-bold text-[var(--text-subtle)]">
                   {currentSentenceIndex + 1} / {totalSentences} Sentences
                 </span>
               </div>
 
-              <h2 className="text-xl font-bold text-zinc-900 dark:text-white leading-snug">
+              <h2 className="text-xl font-bold text-[var(--text-main)] leading-snug">
                 {drill.title}
               </h2>
 
               {/* Scaffolding Formula Box: Shown in Levels 1-10, Hidden in 11-30 */}
               {currentLevelData.showFormula ? (
-                <div className="rounded-2xl bg-emerald-500/10 border border-emerald-500/30 p-4 text-xs font-mono text-emerald-600 dark:text-emerald-400 space-y-1">
-                  <div className="flex items-center justify-between font-bold text-[10px] uppercase tracking-wider text-emerald-500">
+                <div className="rounded-2xl bg-[var(--brand-emerald)]/10 border border-[var(--brand-emerald)]/30 p-4 text-xs font-mono text-[var(--brand-emerald)] space-y-1">
+                  <div className="flex items-center justify-between font-bold text-[10px] uppercase tracking-wider text-[var(--brand-emerald)]">
                     <span className="flex items-center gap-1"><Eye className="h-3.5 w-3.5" /> GUIDED FORMULA VISIBLE</span>
                     <span>TIER 1</span>
                   </div>
-                  <div className="text-sm font-extrabold text-zinc-900 dark:text-white pt-1">
+                  <div className="text-sm font-extrabold text-[var(--text-main)] pt-1">
                     {drill.ruleFormula}
                   </div>
                 </div>
               ) : (
-                <div className="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-4 text-xs font-mono text-amber-600 dark:text-amber-400 space-y-1">
-                  <div className="flex items-center justify-between font-bold text-[10px] uppercase tracking-wider text-amber-500">
+                <div className="rounded-2xl bg-[var(--brand-amber)]/10 border border-[var(--brand-amber)]/30 p-4 text-xs font-mono text-[var(--brand-amber)] space-y-1">
+                  <div className="flex items-center justify-between font-bold text-[10px] uppercase tracking-wider text-[var(--brand-amber)]">
                     <span className="flex items-center gap-1"><EyeOff className="h-3.5 w-3.5" /> FORMULA HIDDEN</span>
                     <span>RECALL MODE</span>
                   </div>
-                  <p className="text-[11px] text-zinc-600 dark:text-zinc-400 pt-0.5">
+                  <p className="text-[11px] text-[var(--text-muted)] pt-0.5">
                     Visual scaffolding removed. Rely on muscle memory to structure clauses correctly.
                   </p>
                 </div>
               )}
 
               {/* Summary */}
-              <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              <p className="text-xs text-[var(--text-muted)] leading-relaxed">
                 {drill.ruleSummary}
               </p>
 
               {/* Perfect Streak Tracker */}
-              <div className="flex items-center justify-between rounded-xl bg-zinc-100 dark:bg-zinc-800 p-3 text-xs font-mono">
-                <span className="flex items-center gap-1.5 text-amber-500 font-bold">
-                  <Flame className="h-4 w-4 fill-amber-500" /> Perfect Streak:
+              <div className="flex items-center justify-between rounded-xl bg-[var(--bg-input)] p-3 text-xs font-mono border border-[var(--border-color)]">
+                <span className="flex items-center gap-1.5 text-[var(--brand-amber)] font-bold">
+                  <Flame className="h-4 w-4 fill-[var(--brand-amber)]" /> Perfect Streak:
                 </span>
-                <span className="font-extrabold text-zinc-900 dark:text-white">
+                <span className="font-extrabold text-[var(--text-main)]">
                   {perfectStreak} Sentences (0 Typos)
                 </span>
               </div>
 
               {/* Progress Bar */}
-              <div className="space-y-1.5 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                <div className="flex justify-between text-[10px] font-mono text-zinc-400">
+              <div className="space-y-1.5 pt-2 border-t border-[var(--border-color)]">
+                <div className="flex justify-between text-[10px] font-mono text-[var(--text-subtle)]">
                   <span>LEVEL PROGRESS</span>
                   <span>{progressPercent}%</span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+                <div className="h-2 w-full rounded-full bg-[var(--bg-input)] overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-violet-500 to-emerald-400 transition-all duration-300"
+                    className="h-full bg-gradient-to-r from-[var(--brand-violet)] to-[var(--brand-emerald)] transition-all duration-300"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -256,11 +254,11 @@ export default function GrammarDrillSessionPage({
             </div>
 
             {/* Explanation callout */}
-            <div className="rounded-2xl border border-indigo-500/20 bg-indigo-500/5 p-5 space-y-1.5 text-xs">
-              <div className="font-mono font-bold text-indigo-400 flex items-center gap-1.5">
+            <div className="rounded-2xl border border-[var(--brand-violet)]/20 bg-[var(--brand-violet)]/5 p-5 space-y-1.5 text-xs">
+              <div className="font-mono font-bold text-[var(--brand-violet)] flex items-center gap-1.5">
                 <Zap className="h-4 w-4" /> LINGUISTIC FOCUS
               </div>
-              <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed">
+              <p className="text-[var(--text-muted)] leading-relaxed">
                 {drill.explanation}
               </p>
             </div>
@@ -278,14 +276,14 @@ export default function GrammarDrillSessionPage({
 
             {/* Between-Sentence Transition Control Card */}
             {isSentenceCompleted && !isDrillCompleted && (
-              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in duration-200">
+              <div className="rounded-2xl border border-[var(--brand-emerald)]/30 bg-[var(--brand-emerald)]/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in fade-in duration-200">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500 text-zinc-950 font-bold">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--brand-emerald)] text-white font-bold">
                     ✓
                   </div>
                   <div>
-                    <h4 className="font-bold text-zinc-900 dark:text-white text-sm">Sentence Completed!</h4>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+                    <h4 className="font-bold text-[var(--text-main)] text-sm">Sentence Completed!</h4>
+                    <p className="text-xs text-[var(--text-muted)] font-mono">
                       Net WPM: {sentenceResults[sentenceResults.length - 1]?.netWpm} · Accuracy: {sentenceResults[sentenceResults.length - 1]?.accuracy}%
                       {sentenceResults[sentenceResults.length - 1]?.hadBackspaces && ' (Backspace used)'}
                     </p>
@@ -294,7 +292,7 @@ export default function GrammarDrillSessionPage({
 
                 <button
                   onClick={handleNextSentence}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-6 py-3 text-xs font-bold text-zinc-950 transition-all shadow-lg shadow-emerald-500/20"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--brand-emerald)] hover:opacity-90 px-6 py-3 text-xs font-bold text-white transition-all shadow-lg"
                 >
                   <span>Next Sentence</span>
                   <ArrowRight className="h-4 w-4" />
@@ -310,48 +308,48 @@ export default function GrammarDrillSessionPage({
         <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-300">
           
           <div className="text-center space-y-4">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-500 to-emerald-400 text-white shadow-2xl shadow-violet-500/20">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-[var(--brand-violet)] to-[var(--brand-emerald)] text-white shadow-2xl">
               <Award className="h-10 w-10" />
             </div>
-            <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-white">Level {currentLevel} Completed!</h2>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-md mx-auto">
-              You completed all sentences for <span className="font-bold text-zinc-900 dark:text-white">{drill.title}</span> at Level {currentLevel}.
+            <h2 className="text-3xl font-extrabold text-[var(--text-main)]">Level {currentLevel} Completed!</h2>
+            <p className="text-sm text-[var(--text-muted)] max-w-md mx-auto">
+              You completed all sentences for <span className="font-bold text-[var(--text-main)]">{drill.title}</span> at Level {currentLevel}.
             </p>
           </div>
 
           {/* Performance Summary Cards */}
           <div className="grid grid-cols-3 gap-4">
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-5 text-center">
-              <div className="text-xs font-mono text-zinc-400 uppercase">Avg Net WPM</div>
-              <div className="text-3xl font-extrabold font-mono text-emerald-600 dark:text-emerald-400 mt-1">{avgWpm}</div>
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 text-center">
+              <div className="text-xs font-mono text-[var(--text-subtle)] uppercase">Avg Net WPM</div>
+              <div className="text-3xl font-extrabold font-mono text-[var(--brand-emerald)] mt-1">{avgWpm}</div>
             </div>
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-5 text-center">
-              <div className="text-xs font-mono text-zinc-400 uppercase">Avg Accuracy</div>
-              <div className="text-3xl font-extrabold font-mono text-teal-600 dark:text-teal-400 mt-1">{avgAcc}%</div>
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 text-center">
+              <div className="text-xs font-mono text-[var(--text-subtle)] uppercase">Avg Accuracy</div>
+              <div className="text-3xl font-extrabold font-mono text-[var(--brand-emerald)] mt-1">{avgAcc}%</div>
             </div>
-            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-5 text-center">
-              <div className="text-xs font-mono text-zinc-400 uppercase">Total Time</div>
-              <div className="text-3xl font-extrabold font-mono text-violet-600 dark:text-violet-400 mt-1">{totalTime}s</div>
+            <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 text-center">
+              <div className="text-xs font-mono text-[var(--text-subtle)] uppercase">Total Time</div>
+              <div className="text-3xl font-extrabold font-mono text-[var(--brand-violet)] mt-1">{totalTime}s</div>
             </div>
           </div>
 
           {/* Per-Sentence Performance Breakdown */}
-          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-6 space-y-4 backdrop-blur-xl">
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white font-mono uppercase tracking-wider flex items-center gap-2">
-              <Layers className="h-4 w-4 text-violet-500" /> Sentence Breakdown
+          <div className="rounded-3xl border border-[var(--border-color)] bg-[var(--bg-card)] p-6 space-y-4 backdrop-blur-xl">
+            <h3 className="text-sm font-bold text-[var(--text-main)] font-mono uppercase tracking-wider flex items-center gap-2">
+              <Layers className="h-4 w-4 text-[var(--brand-violet)]" /> Sentence Breakdown
             </h3>
 
             <div className="space-y-3">
               {sentenceResults.map((res, idx) => (
-                <div key={idx} className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                <div key={idx} className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-input)] p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
                   <div className="space-y-1">
-                    <div className="font-mono text-[10px] text-zinc-400">SENTENCE {idx + 1}</div>
-                    <p className="font-mono text-zinc-900 dark:text-zinc-100 font-medium">"{res.sentenceText}"</p>
+                    <div className="font-mono text-[10px] text-[var(--text-subtle)]">SENTENCE {idx + 1}</div>
+                    <p className="font-mono text-[var(--text-main)] font-medium">&ldquo;{res.sentenceText}&rdquo;</p>
                   </div>
                   <div className="flex items-center gap-4 shrink-0 font-mono text-xs">
-                    <span className="text-emerald-500 font-bold">{res.netWpm} WPM</span>
-                    <span className="text-teal-400">{res.accuracy}% Acc</span>
-                    <span className="text-zinc-500">{res.timeElapsedSeconds}s</span>
+                    <span className="text-[var(--brand-emerald)] font-bold">{res.netWpm} WPM</span>
+                    <span className="text-[var(--brand-emerald)]">{res.accuracy}% Acc</span>
+                    <span className="text-[var(--text-subtle)]">{res.timeElapsedSeconds}s</span>
                   </div>
                 </div>
               ))}
@@ -362,7 +360,7 @@ export default function GrammarDrillSessionPage({
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <button
               onClick={resetDrillLevel}
-              className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-3.5 text-xs font-bold text-zinc-900 dark:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all"
+              className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] py-3.5 text-xs font-bold text-[var(--text-main)] hover:bg-[var(--bg-card-hover)] transition-all"
             >
               <RotateCcw className="h-4 w-4" />
               <span>Retry Level {currentLevel}</span>
@@ -371,7 +369,7 @@ export default function GrammarDrillSessionPage({
             {currentLevel < 30 ? (
               <button
                 onClick={advanceToNextLevel}
-                className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 rounded-2xl bg-violet-600 hover:bg-violet-500 py-3.5 text-xs font-bold text-white transition-all shadow-lg shadow-violet-600/20"
+                className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--brand-violet)] hover:opacity-90 py-3.5 text-xs font-bold text-white transition-all shadow-lg"
               >
                 <span>Unlock Level {currentLevel + 1}</span>
                 <ArrowRight className="h-4 w-4" />
@@ -379,7 +377,7 @@ export default function GrammarDrillSessionPage({
             ) : (
               <Link
                 href={`/library/grammar/${moduleId}`}
-                className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 hover:bg-emerald-400 py-3.5 text-xs font-bold text-zinc-950 transition-all shadow-lg shadow-emerald-500/20"
+                className="w-full sm:w-1/2 inline-flex items-center justify-center gap-2 rounded-2xl bg-[var(--brand-emerald)] hover:opacity-90 py-3.5 text-xs font-bold text-white transition-all shadow-lg"
               >
                 <span>Module Complete — Back to Drills</span>
                 <ArrowRight className="h-4 w-4" />

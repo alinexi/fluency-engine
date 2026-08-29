@@ -121,12 +121,12 @@ export const supabaseDbAdapter: DatabaseAdapter = {
       return [];
     }
 
-    return (data || []).map((row: any) => ({
-      id: row.id,
-      userId: row.user_id,
-      title: row.title,
-      date: row.date,
-      metrics: row.metrics,
+    return (data || []).map((row: Record<string, unknown>) => ({
+      id: row.id as string,
+      userId: row.user_id as string,
+      title: row.title as string,
+      date: row.date as string,
+      metrics: row.metrics as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     }));
   },
 
@@ -165,16 +165,17 @@ export const supabaseDbAdapter: DatabaseAdapter = {
       return [];
     }
 
-    return (data || []).map((row: any) => ({
-      id: row.id,
-      userId: row.user_id,
-      promptTitle: row.prompt_title,
-      examMode: row.exam_mode,
-      date: row.date,
-      essayText: row.essay_text,
-      result: row.result,
+    return (data || []).map((row: Record<string, unknown>) => ({
+      id: row.id as string,
+      userId: row.user_id as string,
+      promptTitle: row.prompt_title as string,
+      examMode: row.exam_mode as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+      date: row.date as string,
+      essayText: row.essay_text as string,
+      result: row.result as any, // eslint-disable-line @typescript-eslint/no-explicit-any
     }));
   },
+
 
   async getUserStats(userId: string): Promise<UserStats> {
     const studioHistory = await this.getStudioHistory(userId);

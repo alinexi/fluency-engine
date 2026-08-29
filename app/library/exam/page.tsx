@@ -15,12 +15,6 @@ const TASK_MAP: Record<ExamName, TaskName[]> = {
   'TOEFL iBT': ['Integrated', 'Academic Discussion'],
 };
 
-const EXAM_COLORS: Record<ExamName, string> = {
-  'IELTS Academic': 'emerald',
-  'IELTS General': 'teal',
-  'TOEFL iBT': 'violet',
-};
-
 const TASK_LABELS: Record<TaskName, string> = {
   'Task 1': 'Task 1 — Visual Description',
   'Task 2': 'Task 2 — Essay',
@@ -53,8 +47,6 @@ export default function ExamLibraryPage() {
     [filteredByExamTask, activeType]
   );
 
-  const color = EXAM_COLORS[activeExam];
-
   const handleExamChange = (exam: ExamName) => {
     setActiveExam(exam);
     setActiveTask(TASK_MAP[exam][0]);
@@ -70,20 +62,20 @@ export default function ExamLibraryPage() {
     <div className="py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8">
       
       {/* Back to Hub */}
-      <Link href="/library" className="inline-flex items-center gap-2 text-xs font-mono text-zinc-500 hover:text-emerald-500 transition-colors">
+      <Link href="/library" className="inline-flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] hover:text-[var(--brand-emerald)] transition-colors">
         <ArrowLeft className="h-3.5 w-3.5" /> Back to Central Library Hub
       </Link>
 
       {/* Header */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800 pb-6">
-        <div className="inline-flex items-center gap-2 text-xs font-mono mb-2 text-emerald-500">
+      <div className="border-b border-[var(--border-color)] pb-6">
+        <div className="inline-flex items-center gap-2 text-xs font-mono mb-2 text-[var(--brand-emerald)]">
           <BookOpen className="h-4 w-4" />
           EXAM LIBRARY
         </div>
-        <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+        <h1 className="text-3xl font-extrabold text-[var(--text-main)] tracking-tight">
           IELTS &amp; TOEFL Practice Prompts
         </h1>
-        <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-1">
+        <p className="text-[var(--text-muted)] text-sm mt-1">
           Choose an exam type, task, and question format — then practice typing Band 9 model answers.
         </p>
       </div>
@@ -91,7 +83,6 @@ export default function ExamLibraryPage() {
       {/* Level 1 — Exam Tabs */}
       <div className="flex flex-wrap gap-3">
         {EXAMS.map(exam => {
-          const c = EXAM_COLORS[exam];
           const isActive = exam === activeExam;
           return (
             <button
@@ -100,12 +91,8 @@ export default function ExamLibraryPage() {
               className={cn(
                 'rounded-2xl px-5 py-2.5 text-sm font-bold border transition-all shadow-sm',
                 isActive
-                  ? c === 'emerald'
-                    ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 shadow-emerald-500/10'
-                    : c === 'teal'
-                    ? 'bg-teal-500/20 text-teal-600 dark:text-teal-400 border-teal-500/40'
-                    : 'bg-violet-500/20 text-violet-600 dark:text-violet-400 border-violet-500/40'
-                  : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                  ? 'bg-[var(--brand-emerald)]/15 text-[var(--brand-emerald)] border-[var(--brand-emerald)]/40 shadow-emerald-500/10'
+                  : 'bg-[var(--bg-card)] text-[var(--text-muted)] border-[var(--border-color)] hover:bg-[var(--bg-card-hover)] hover:text-[var(--text-main)]'
               )}
             >
               {exam}
@@ -123,8 +110,8 @@ export default function ExamLibraryPage() {
             className={cn(
               'rounded-xl px-4 py-2 text-xs font-mono font-bold border transition-all',
               task === safeTask
-                ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-white border-emerald-500/40'
-                : 'bg-transparent text-zinc-500 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-900'
+                ? 'bg-[var(--bg-input)] text-[var(--text-main)] border-[var(--brand-emerald)]/40'
+                : 'bg-transparent text-[var(--text-muted)] border-[var(--border-color)] hover:bg-[var(--bg-card)] hover:text-[var(--text-main)]'
             )}
           >
             {TASK_LABELS[task]}
@@ -140,8 +127,8 @@ export default function ExamLibraryPage() {
             className={cn(
               'rounded-full px-3 py-1 text-[11px] font-mono font-bold border transition-all',
               activeType === 'All'
-                ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
-                : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 border-zinc-200 dark:border-zinc-800'
+                ? 'bg-[var(--brand-emerald)]/15 text-[var(--brand-emerald)] border-[var(--brand-emerald)]/30'
+                : 'bg-[var(--bg-input)] text-[var(--text-muted)] border-[var(--border-color)] hover:text-[var(--text-main)]'
             )}
           >
             All Types
@@ -153,8 +140,8 @@ export default function ExamLibraryPage() {
               className={cn(
                 'rounded-full px-3 py-1 text-[11px] font-mono font-bold border transition-all',
                 activeType === qt
-                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
-                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 border-zinc-200 dark:border-zinc-800'
+                  ? 'bg-[var(--brand-emerald)]/15 text-[var(--brand-emerald)] border-[var(--brand-emerald)]/30'
+                  : 'bg-[var(--bg-input)] text-[var(--text-muted)] border-[var(--border-color)] hover:text-[var(--text-main)]'
               )}
             >
               {qt}
@@ -165,25 +152,25 @@ export default function ExamLibraryPage() {
 
       {/* Prompt Cards Grid */}
       {displayed.length === 0 ? (
-        <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-12 text-center">
-          <p className="text-zinc-500 text-sm">No prompts found for this selection.</p>
+        <div className="rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-12 text-center">
+          <p className="text-[var(--text-muted)] text-sm">No prompts found for this selection.</p>
         </div>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {displayed.map(prompt => (
             <Link
               key={prompt.id}
-              href={`/library/exam/${prompt.id}`}
-              className="group flex flex-col justify-between rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 p-5 backdrop-blur-xl transition-all hover:border-emerald-500/40 hover:shadow-xl hover:-translate-y-0.5"
+              href={`/library/${prompt.id}`}
+              className="group flex flex-col justify-between rounded-2xl border border-[var(--border-color)] bg-[var(--bg-card)] p-5 backdrop-blur-xl transition-all hover:border-[var(--brand-emerald)]/40 hover:bg-[var(--bg-card-hover)] hover:shadow-xl hover:-translate-y-0.5"
             >
               <div className="space-y-3">
                 {/* Question Type Badge */}
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-[var(--brand-emerald)]/10 border border-[var(--brand-emerald)]/20 px-2.5 py-1 text-[10px] font-mono font-bold text-[var(--brand-emerald)] uppercase tracking-wider">
                   {prompt.questionType}
                 </div>
 
                 {/* Prompt Text */}
-                <p className="text-sm text-zinc-900 dark:text-zinc-100 font-medium leading-relaxed line-clamp-4">
+                <p className="text-sm text-[var(--text-main)] font-medium leading-relaxed line-clamp-4">
                   {prompt.promptText}
                 </p>
 
@@ -192,7 +179,7 @@ export default function ExamLibraryPage() {
                   {prompt.tags.map(tag => (
                     <span
                       key={tag}
-                      className="inline-flex items-center gap-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-0.5 text-[10px] font-mono text-zinc-500 dark:text-zinc-400"
+                      className="inline-flex items-center gap-1 rounded-full bg-[var(--bg-input)] border border-[var(--border-color)] px-2 py-0.5 text-[10px] font-mono text-[var(--text-subtle)]"
                     >
                       <Tag className="h-2.5 w-2.5" />
                       {tag.replace('#', '')}
@@ -202,9 +189,9 @@ export default function ExamLibraryPage() {
               </div>
 
               {/* Footer */}
-              <div className="mt-4 flex items-center justify-between border-t border-zinc-100 dark:border-zinc-800 pt-3 text-[11px] font-mono">
-                <span className="text-zinc-500">~{prompt.targetWordCount} words</span>
-                <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 group-hover:translate-x-0.5 transition-transform font-bold">
+              <div className="mt-4 flex items-center justify-between border-t border-[var(--border-color)] pt-3 text-[11px] font-mono">
+                <span className="text-[var(--text-subtle)]">~{prompt.targetWordCount} words</span>
+                <span className="flex items-center gap-1 text-[var(--brand-emerald)] group-hover:translate-x-0.5 transition-transform font-bold">
                   Start Practice <ChevronRight className="h-3.5 w-3.5" />
                 </span>
               </div>
