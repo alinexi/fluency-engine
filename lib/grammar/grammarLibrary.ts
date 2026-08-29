@@ -6,6 +6,37 @@ export type GrammarModuleId =
   | 'structure'
   | 'parts-of-speech';
 
+export type LevelTier = 'guided' | 'fading' | 'stress';
+
+export interface LevelConstraints {
+  targetWpm?: number;
+  requiredAccuracyPercent?: number;
+  perfectStreakTarget?: number;
+  hasIrregularVerbs?: boolean;
+  hasQuestions?: boolean;
+  hasNegatives?: boolean;
+}
+
+export interface GrammarLevel {
+  level: number; // 1 to 30
+  tier: LevelTier; // 'guided' (1-10) | 'fading' (11-20) | 'stress' (21-30)
+  sentences: string[];
+  showFormula: boolean; // true for 1-10, false for 11-30
+  constraints?: LevelConstraints;
+}
+
+export interface GrammarDrill {
+  id: string;
+  moduleId: GrammarModuleId;
+  title: string;
+  ruleFormula?: string;
+  ruleSummary: string;
+  difficultyLabel: string; // e.g., "A1-A2 Foundation" | "B1-B2 Intermediate" | "C1 Advanced"
+  targetCategory: string;
+  explanation: string;
+  levels: GrammarLevel[];
+}
+
 export interface GrammarModuleInfo {
   id: GrammarModuleId;
   title: string;
@@ -16,24 +47,12 @@ export interface GrammarModuleInfo {
   drillCount: number;
 }
 
-export interface GrammarDrill {
-  id: string;
-  moduleId: GrammarModuleId;
-  title: string;
-  ruleFormula?: string;
-  ruleSummary: string;
-  difficultyLevel: 1 | 2 | 3; // 1 = A2-B1, 2 = B2, 3 = C1
-  targetCategory: string;
-  sentences: string[];
-  explanation: string;
-}
-
 export const GRAMMAR_MODULES: GrammarModuleInfo[] = [
   {
     id: 'tenses',
     title: 'Tenses & Aspects',
     subtitle: 'Master time framing & precision',
-    description: 'Drill past, present, future, perfect, and continuous aspects to express chronological actions accurately.',
+    description: 'Progress from basic facts to complex past perfect and continuous aspects with 30-level progressive drills.',
     color: 'emerald',
     iconName: 'Clock',
     drillCount: 8,
@@ -42,7 +61,7 @@ export const GRAMMAR_MODULES: GrammarModuleInfo[] = [
     id: 'conditionals',
     title: 'Conditionals & Hypotheses',
     subtitle: 'Zero to Mixed Conditionals',
-    description: 'Isolate cause-and-effect, hypothetical outcomes, and past regrets with precise clause structures.',
+    description: 'Isolate cause-and-effect, hypothetical outcomes, and past regrets across 30 levels of sentence scaffolding.',
     color: 'violet',
     iconName: 'GitFork',
     drillCount: 5,
