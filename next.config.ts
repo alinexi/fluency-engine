@@ -1,7 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: '/library/:promptId(ielts-.*|toefl-.*|acad-.*)',
+        destination: '/library/exam/:promptId',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
